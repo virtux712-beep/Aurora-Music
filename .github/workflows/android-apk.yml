@@ -1,0 +1,74 @@
+name: Android shell APK
+
+on:
+  push:
+    branches: [android-shell]
+    paths:
+      - 'android-shell/**'
+      - '.github/workflows/android-apk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Download the v0.1.0 source package
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/aurora-src
+          gh release download v0.1.0 --repo "${{ github.repository }}" \
+            --pattern 'Aurora-Music-0.1.0-source.zip' --dir /tmp/aurora-src
+          unzip -q /tmp/aurora-src/Aurora-Music-0.1.0-source.zip -d /tmp/aurora-src/app
+          SRC_DIR=$(dirname "$(find /tmp/aurora-src/app -maxdepth 3 -name electron.vite.config.ts | head -1)")
+          echo "SRC_DIR=$SRC_DIR" >> "$GITHUB_ENV"
+          ls "$SRC_DIR"
+
+      - name: Build the desktop renderer
+        working-directory: ${{ env.SRC_DIR }}
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npx electron-vite build
+          ls out/renderer
+
+      - name: Assemble the shell web root
+        working-directory: android-shell
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build:shim
+          node scripts/prepare-www.mjs "${{ env.SRC_DIR }}/out/renderer" ./seeds
+          ls www
+
+      - name: Generate the Android project and build the APK
+        working-directory: android-shell
+        run: |
+          npx cap add android
+          npx cap sync android
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Publish the APK to a prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp android-shell/android/app/build/outputs/apk/debug/app-debug.apk Aurora-Music-Android-Shell.apk
+          gh release create android-shell-v0.1.0 --prerelease \
+            --title 'Aurora Music · 安卓套壳验证版' \
+            --notes 'Capacitor 套壳验证：桌面界面在安卓 WebView 中运行，本地导入/播放/歌词已接通；在线音源未接入。调试签名，手机上允许「安装未知应用」后可直接安装。' \
+            || true
+          gh release upload android-shell-v0.1.0 Aurora-Music-Android-Shell.apk --clobber
