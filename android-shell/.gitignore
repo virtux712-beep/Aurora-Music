@@ -1,0 +1,6 @@
+node_modules/
+www/
+www-build/
+android/
+host-main.cjs
+run-host.sh

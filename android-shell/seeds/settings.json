@@ -1,0 +1,78 @@
+{
+ "sourceConfig": {},
+ "enabledSources": {},
+ "sourceOrder": [],
+ "allowOpenLicenseDownloads": true,
+ "autoHealthCheck": true,
+ "autoGrantSourceHosts": true,
+ "safeMode": false,
+ "theme": "dark",
+ "skin": "star-dream",
+ "preferredQuality": "lossless",
+ "desktopLyrics": {
+  "enabled": false,
+  "locked": false,
+  "alwaysOnTop": true,
+  "fontSize": 34,
+  "fontFamily": "",
+  "color": "#8fd0ff",
+  "inactiveColor": "#e8edf5",
+  "background": 0.32,
+  "showTranslation": true,
+  "showNextLine": true,
+  "x": -1,
+  "y": -1,
+  "width": 900,
+  "height": 150
+ },
+ "downloads": {
+  "directory": "",
+  "nameTemplate": "artist-title",
+  "concurrency": 2,
+  "writeTags": true
+ },
+ "systemIntegration": {
+  "tray": true,
+  "taskbarButtons": true,
+  "mediaKeys": true,
+  "showTrackInTray": true,
+  "launchAtLogin": false,
+  "closeToTray": false
+ },
+ "sound": {
+  "equalizer": {
+   "enabled": false,
+   "preset": "flat",
+   "gains": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "preampDb": 0
+  },
+  "loudness": {
+   "enabled": false,
+   "targetDb": -14
+  },
+  "outputDeviceId": "",
+  "gapless": true,
+  "crossfadeSeconds": 0
+ },
+ "lyricsOffsetMs": 0,
+ "updateCheck": {
+  "feedUrl": "",
+  "autoCheck": false
+ },
+ "httpApi": {
+  "enabled": false,
+  "port": 47821,
+  "token": ""
+ }
+}
