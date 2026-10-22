@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Aurora Icon 预览</title>
+    <style>
+      :root { color-scheme: dark; }
+      body {
+        margin: 0;
+        padding: 24px;
+        background: #0b0d12;
+        color: #eef1f8;
+        font: 13px/1.6 "Segoe UI", system-ui, sans-serif;
+      }
+      h1 { font-size: 15px; font-weight: 600; margin: 0 0 4px; }
+      p { margin: 0 0 20px; color: #9aa3b5; }
+      .row { display: flex; align-items: flex-end; gap: 28px; margin-bottom: 28px; }
+      .cell { text-align: center; }
+      .cell img { display: block; image-rendering: auto; }
+      .cell span { display: block; margin-top: 8px; color: #7f8798; font-size: 11px; }
+      .light { background: #f4f5f8; color: #14161c; padding: 18px; border-radius: 14px; }
+      .light span { color: #5c6473; }
+      .light h1 { color: #14161c; }
+      .hero { display: flex; gap: 24px; align-items: flex-start; }
+      .hero img { width: 320px; height: 320px; }
+    </style>
+  </head>
+  <body>
+    <h1>Aurora Music · 应用图标</h1>
+    <p>同一个 1024 主图，下面全是按比例缩下来的（不是另画的）。</p>
+
+    <div class="hero">
+      <img src="../build/icon.png" alt="icon 1024" width="320" height="320" />
+      <div>
+        <div class="row">
+          <div class="cell"><img src="../build/icon-256.png" alt="256" width="256" height="256" /><span>256</span></div>
+        </div>
+        <div class="row">
+          <div class="cell"><img src="../build/icon-128.png" alt="128" width="128" height="128" /><span>128</span></div>
+          <div class="cell"><img src="../build/icon-64.png" alt="64" width="64" height="64" /><span>64</span></div>
+          <div class="cell"><img src="../build/icon.png" alt="32" width="32" height="32" /><span>32（浏览器缩放）</span></div>
+          <div class="cell"><img src="../build/icon.png" alt="16" width="16" height="16" /><span>16（浏览器缩放）</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="light">
+      <h1>浅色背景</h1>
+      <div class="row">
+        <div class="cell"><img src="../build/icon-256.png" alt="256" width="128" height="128" /><span>128</span></div>
+        <div class="cell"><img src="../build/icon-64.png" alt="64" width="64" height="64" /><span>64</span></div>
+        <div class="cell"><img src="../build/icon.png" alt="32" width="32" height="32" /><span>32</span></div>
+      </div>
+    </div>
+  </body>
+</html>

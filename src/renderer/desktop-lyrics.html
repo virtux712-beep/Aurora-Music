@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: aurora-media:; font-src 'self' data:; connect-src 'self' ws: http://localhost:*; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <title>Aurora 桌面歌词</title>
+    <style>
+      /* The window itself is transparent: everything visible is drawn by the Vue component, so a
+         failed load shows an empty strip rather than a white rectangle floating on the desktop. */
+      html,
+      body,
+      #desktop-lyrics {
+        margin: 0;
+        height: 100%;
+        background: transparent;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="desktop-lyrics"></div>
+    <script type="module" src="/src/desktop-lyrics/main.ts"></script>
+  </body>
+</html>

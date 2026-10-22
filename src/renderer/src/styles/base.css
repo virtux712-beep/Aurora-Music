@@ -1,0 +1,1089 @@
+/* Aurora Music — design tokens, shell, sidebar, top bar, player bar. */
+
+/*
+ * Registered so the value can *animate* (see the paused rule in `app.css`), not just switch.
+ *
+ * Every glass surface in the app blurs what is behind it, and the app has a canvas behind everything: each
+ * time that canvas produces a frame, the compositor has to re-run the blur of every glass layer above it.
+ * Cost scales with the square of the radius, so halving it while the picture is still saves most of the work
+ * and is invisible — a glass panel over a *still* background looks the same at 5px as at 14px.
+ */
+@property --glass-blur-scale {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
+:root {
+  color-scheme: dark;
+  /* 1 = the radii written at each use site; the paused rule in `app.css` lowers it. */
+  --glass-blur-scale: 1;
+  transition: --glass-blur-scale 600ms ease;
+  --font-sans: system-ui, 'Segoe UI Variable Text', 'Segoe UI', 'Microsoft YaHei UI', 'PingFang SC', 'Noto Sans CJK SC', sans-serif;
+
+  --bg: #0d1016;
+  --bg-glow: rgba(106, 79, 193, .10);
+  --panel: #141820;
+  --panel-soft: #191e28;
+  --card: #181d26;
+  --line: rgba(255, 255, 255, .075);
+  --line-strong: rgba(255, 255, 255, .14);
+  --text: #f1f2f7;
+  --muted: #8e95a5;
+  --faint: #5f6674;
+  --accent: #a58aff;
+  --accent-strong: #8869f5;
+  --accent-soft: rgba(165, 138, 255, .14);
+  --danger: #f2808e;
+  --success: #7ddba4;
+  --warn: #f0c274;
+  --shadow: 0 18px 40px rgba(4, 6, 12, .45);
+  /*
+   * Tokens the theme system owns. `base.css` defines them so the default skin has real values, and a
+   * skin (built-in or user-authored) overwrites them through the generated `#aurora-skins` stylesheet.
+   *
+   * They exist as tokens rather than as literals at the use site for one reason: a user theme can
+   * only change what is expressed as a variable. Anything hard-coded is a colour a theme cannot reach.
+   */
+  --card-soft: #191e28;
+  --accent-line: rgba(165, 138, 255, .30);
+  --glass: rgba(20, 24, 32, .74);
+  --glass-strong: rgba(20, 24, 32, .92);
+  --glass-line: rgba(255, 255, 255, .09);
+  --player-bg: rgba(13, 16, 22, .86);
+  --shadow-soft: 0 10px 24px rgba(4, 6, 12, .32);
+  /* Colour of the native title strip; the renderer mirrors it to the main process on every change. */
+  --titlebar-bg: #0d1016;
+  /* Ambient layer: two tinted colours, how strongly they glow, and how slowly they drift. */
+  --ambient-a: #a58aff;
+  --ambient-b: #6fd6e8;
+  --ambient-glow: .10;
+  --ambient-drift: 90s;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --row-height: 56px;
+
+  /*
+   * Layout ratios — the shell is sized by proportion, not by fixed pixels.
+   *
+   * - Sidebar: ~1/6.5 of a 1440px window. Wide enough for 13px nav labels with its icon, narrow
+   *   enough that the content column keeps the golden share. Clamped at both ends so an ultrawide
+   *   window cannot inflate it into a second content area, and a small one cannot crush the labels.
+   * - Bars: both 8px multiples. The player is deliberately the taller of the two because it stacks a
+   *   transport row and a progress row, so its extra height matches its greater optical weight.
+   * - `--content-max`: past ~1180px a music row grows an empty gap in its middle column and the eye
+   *   travels roughly 1.6x further per row, which is exactly what makes a wide list tiring to scan.
+   */
+  --sidebar-w: clamp(212px, 15.4vw, 264px);
+  /* Height of the window's own title strip — mirrors `titleBarOverlay.height` in the main process. */
+  --titlebar-h: 36px;
+  --topbar-h: 72px;
+  --player-h: 100px;
+  --content-max: 1180px;
+  --content-gutter: clamp(22px, 3.2vw, 48px);
+
+  font-family: var(--font-sans);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f5f6f9;
+  --bg-glow: rgba(120, 92, 220, .10);
+  --panel: #ffffff;
+  --panel-soft: #eef0f5;
+  --card: #ffffff;
+  --line: rgba(30, 33, 46, .10);
+  --line-strong: rgba(30, 33, 46, .18);
+  --text: #1a1c23;
+  --muted: #666c7b;
+  --faint: #9aa0ad;
+  --accent: #6c4fe0;
+  --accent-strong: #5c3fd6;
+  --accent-soft: rgba(108, 79, 224, .10);
+  --danger: #d2434f;
+  --success: #1f9d5a;
+  --warn: #b57a11;
+  --shadow: 0 16px 36px rgba(28, 32, 48, .12);
+  /*
+   * The light theme's glass is *more* opaque than its dark counterpart, not less.
+   *
+   * A translucent white panel over a light page loses its edge completely — the bar stops reading as
+   * a separate surface and the layout looks broken — so opacity here is what keeps the layering
+   * visible while the backdrop blur still tints it with whatever is behind.
+   */
+  --card-soft: #f1f3f8;
+  --accent-line: rgba(108, 79, 224, .24);
+  --glass: rgba(255, 255, 255, .78);
+  --glass-strong: rgba(255, 255, 255, .94);
+  --glass-line: rgba(30, 33, 46, .10);
+  --player-bg: rgba(255, 255, 255, .88);
+  --shadow-soft: 0 10px 24px rgba(28, 32, 48, .10);
+  --titlebar-bg: #ffffff;
+  --ambient-glow: .08;
+}
+
+/*
+ * Ambient layer — the skin's atmosphere, drawn behind every page.
+ *
+ * Two radial fields in the skin's own colours, drifting against each other on a long, uneven cycle.
+ * `pointer-events: none` and `z-index: 0` keep it strictly decorative: it is never able to intercept a
+ * click or cover content, however strong a theme's glow is.
+ */
+.ambient-layer {
+  position: fixed;
+  z-index: 0;
+  inset: var(--titlebar-h) 0 0 0;
+  width: 100%;
+  height: calc(100% - var(--titlebar-h));
+  pointer-events: none;
+}
+
+.ambient-glow {
+  position: fixed;
+  z-index: 0;
+  inset: var(--titlebar-h) 0 0 0;
+  pointer-events: none;
+  opacity: var(--ambient-glow, .1);
+  background:
+    radial-gradient(58% 44% at 22% 8%, var(--ambient-a), transparent 68%),
+    radial-gradient(52% 40% at 84% 82%, var(--ambient-b), transparent 70%);
+  animation: ambient-drift var(--ambient-drift, 90s) ease-in-out infinite alternate;
+  will-change: transform;
+  /*
+   * 让「状态改变」永远不会“啪”一下。
+   *
+   * 漂移本身一轮 90~168 秒、全程只走 5% 视口，所以把 `animation-play-state` 一按到底看不出接缝；真正会「一跳」
+   * 的是由状态驱动的那部分——暂停时按 0.72 收拢、节能/沉浸档改变强度、换主题换色——那些是瞬间到位的。这行把
+   * 它们都变成 700ms 的过渡。
+   */
+  transition: opacity 700ms ease, filter 700ms ease, background 700ms ease;
+}
+
+@keyframes ambient-drift {
+  from { transform: translate3d(-2.5%, -1.5%, 0) scale(1.04); }
+  to { transform: translate3d(2.5%, 2%, 0) scale(1.1); }
+}
+
+/* Motion is the *only* thing an ambient layer has, so honour the preference by holding it still. */
+@media (prefers-reduced-motion: reduce) {
+  .ambient-glow { animation: none; }
+}
+
+* { box-sizing: border-box; }
+
+html, body, #app { height: 100%; }
+
+body {
+  margin: 0;
+  min-width: 1000px;
+  overflow: hidden;
+  color: var(--text);
+  background: var(--bg);
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, select, textarea { font: inherit; color: inherit; }
+
+button {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+button:disabled { opacity: .45; cursor: not-allowed; }
+
+a { color: inherit; text-decoration: none; }
+
+h1, h2, h3 { margin: 0; font-weight: 700; letter-spacing: -.4px; }
+
+ul { margin: 0; padding: 0; list-style: none; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--faint); }
+
+/* ---------------------------------------------------------------- shell */
+
+.app-shell {
+  display: flex;
+  height: 100%;
+  /* Room for `.titlebar`, so no control can ever sit underneath the window buttons. */
+  padding-top: var(--titlebar-h);
+  background:
+    radial-gradient(1200px 500px at 78% -12%, var(--bg-glow), transparent 62%),
+    var(--bg);
+}
+
+/*
+ * The window title strip.
+ *
+ * The native caption is gone (it would drag the un-hideable window icon along with it), so this strip
+ * replaces it: it is the drag handle for the whole window, and it carries the exact colour Windows is
+ * told to paint `titleBarOverlay` with, so the minimise/maximise/close buttons blend into it.
+ *
+ * That colour follows the theme. It used to be a fixed `#0d1016`, which was the whole of the "light
+ * theme looks broken" complaint: the page went white and the top 36 pixels stayed black, so the window
+ * read as a dark title bar sitting on a light app.
+ */
+.titlebar {
+  position: fixed;
+  z-index: 60;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: var(--titlebar-h);
+  background: var(--titlebar-bg, var(--bg));
+  -webkit-app-region: drag;
+  user-select: none;
+}
+
+.titlebar::after {
+  /* A hairline instead of a hard edge, so the strip reads as chrome rather than as a cut-off panel. */
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: var(--line);
+}
+
+.sidebar {
+  width: var(--sidebar-w);
+  flex: 0 0 var(--sidebar-w);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 14px 16px;
+  border-right: 1px solid var(--line);
+  background: color-mix(in srgb, var(--panel) 72%, transparent);
+  backdrop-filter: blur(calc(14px * var(--glass-blur-scale)));
+}
+
+/*
+ * The sidebar carries no wordmark. It was a purple rounded square with three white bars plus a
+ * bold "Aurora", and it duplicated the window caption while eating the top of the column. The
+ * brand belongs to the title bar and the app icon, not to the navigation — so `.brand` and
+ * `.brand-mark` are gone rather than hidden, and the first caption now starts the list.
+ */
+
+.nav-group { display: grid; gap: 3px; }
+.collection-nav { margin-top: 26px; }
+
+.nav-caption {
+  margin: 0 12px 9px;
+  color: var(--faint);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+}
+
+.nav-item, .settings-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 13px;
+  transition: background .18s ease, color .18s ease;
+}
+
+.nav-item:hover, .settings-link:hover { color: var(--text); background: var(--accent-soft); }
+
+.nav-item.router-link-active, .settings-link.router-link-active {
+  color: var(--text);
+  background: linear-gradient(90deg, var(--accent-soft), transparent);
+  box-shadow: inset 3px 0 var(--accent);
+}
+
+.nav-icon {
+  width: 18px;
+  color: currentColor;
+  font-size: 17px;
+  line-height: 1;
+  text-align: center;
+}
+
+.nav-item small { margin-left: auto; color: var(--faint); font-size: 10px; }
+
+.sidebar-bottom { margin-top: auto; display: grid; gap: 12px; }
+
+.library-card {
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--panel-soft) 70%, transparent);
+}
+
+.library-card-head { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; }
+.library-card-head span:last-child { color: var(--accent); font-weight: 700; }
+
+.library-card-bar {
+  height: 4px;
+  margin: 9px 0 8px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--line-strong);
+}
+.library-card-bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  /* Skin-derived, not a fixed purple: this bar appears on every page and used to stay lavender even
+     under a theme whose accent is orange. */
+  background: linear-gradient(90deg, var(--accent-strong), var(--accent));
+  transition: width .3s ease;
+}
+
+.library-card p { margin: 0 0 10px; color: var(--faint); font-size: 10px; }
+
+.library-card-action {
+  width: 100%;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+}
+.library-card-action:hover { background: var(--accent); color: #fff; }
+
+/* --------------------------------------------------------------- topbar */
+
+/*
+ * The scroll area stops where the player bar begins.
+ *
+ * The bar is `position: fixed`, so the shell does not reserve space for it on its own — the old
+ * layout compensated with a `padding-bottom: calc(--player-h + …)` on `.view`, which only kept the
+ * *last* row above the bar while every row in between could still scroll underneath it. Sizing the
+ * content column instead makes the three layers structural: header, content, bar.
+ */
+.main-content {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  height: calc(100% - var(--player-h));
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  height: var(--topbar-h);
+  flex: 0 0 var(--topbar-h);
+  /* Same gutter as `.view`, so the bar's search field lines up with the page title below it. */
+  padding: 0 var(--content-gutter);
+  border-bottom: 1px solid var(--line);
+}
+
+.top-actions { display: flex; align-items: center; gap: 10px; }
+
+.search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 340px;
+  padding: 9px 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: var(--panel-soft);
+  color: var(--muted);
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+.search-wrap:focus-within { border-color: color-mix(in srgb, var(--accent) 45%, transparent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.search-wrap.compact { width: 280px; }
+.search-wrap.large { width: 100%; padding: 12px 14px; margin-bottom: 24px; }
+
+.search-icon { font-size: 18px; transform: rotate(-18deg); }
+
+.search-wrap input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 12px;
+}
+.search-wrap input::placeholder { color: var(--faint); }
+.search-wrap input::-webkit-search-cancel-button { filter: invert(.6); }
+/* The native clear glyph is drawn dark; inverting it on a light field turns it into an invisible smudge. */
+:root[data-theme='light'] .search-wrap input::-webkit-search-cancel-button { filter: none; }
+
+.search-wrap kbd {
+  padding: 3px 6px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  color: var(--faint);
+  font-size: 9px;
+}
+
+.icon-button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  color: var(--muted);
+  font-size: 17px;
+}
+.icon-button:hover { color: var(--text); background: var(--accent-soft); }
+
+.theme-control { position: relative; }
+
+.theme-menu {
+  position: absolute;
+  z-index: 30;
+  top: 42px;
+  right: 0;
+  width: 148px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+.theme-menu button {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  font-size: 11px;
+  text-align: left;
+}
+.theme-menu button:hover { color: var(--text); background: var(--accent-soft); }
+.theme-menu button.active { color: var(--accent); font-weight: 700; }
+/* Separated by a hairline: the three modes are the quick decision, this is a way out of the menu. */
+.theme-menu .theme-menu-more {
+  margin-top: 4px;
+  border-top: 1px solid var(--line);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  color: var(--accent);
+}
+
+.import-progress {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* --------------------------------------------------------------- player */
+
+/*
+ * The player bar is the app's one piece of floating chrome: it sits over the page, so it is built as
+ * glass (translucent skin colour + backdrop blur + a lit top edge) rather than as another flat panel.
+ *
+ * The edge is a gradient hairline in the skin's accent instead of a 1px border: a solid border reads
+ * as a seam across the screen, while a hairline that fades out at both ends reads as light falling on
+ * the edge of a surface.
+ */
+.player-bar {
+  position: fixed;
+  z-index: var(--z-player);
+  right: 0;
+  bottom: 0;
+  /* Tracks the sidebar token, so the bar can never drift out of alignment with the shell. */
+  left: var(--sidebar-w);
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  height: var(--player-h);
+  padding: 0 var(--content-gutter);
+  border-top: 1px solid var(--glass-line);
+  background: var(--player-bg);
+  backdrop-filter: blur(calc(26px * var(--glass-blur-scale))) saturate(1.5);
+  -webkit-backdrop-filter: blur(calc(26px * var(--glass-blur-scale))) saturate(1.5);
+  box-shadow: var(--shadow-soft);
+}
+
+.player-bar::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-line) 30%, var(--accent-line) 70%, transparent);
+  pointer-events: none;
+}
+
+/* An accent bloom rising from the cover: the bar belongs to the track, not just to the window. */
+.player-bar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 340px;
+  height: 100%;
+  background: radial-gradient(120px 70px at 60px 50%, var(--accent-soft), transparent 72%);
+  pointer-events: none;
+}
+
+/*
+ * The two colours the shell is painted with on the playback-detail page.
+ *
+ * Registered as `<color>` so that changing them *interpolates*: an unregistered custom property is an
+ * opaque string, `transition` has nothing to work with, and the bar stepped from one cover's colour to the
+ * next in a single frame while the room behind it spent 900 ms fading. The `transition` is declared on the
+ * element they are written to, and the bar inherits the travelling value — so it follows with no rule of
+ * its own. The initial value is only what a page paints before anything is measured.
+ */
+@property --shell-strip { syntax: '<color>'; inherits: true; initial-value: #0a0c12; }
+@property --shell-bar { syntax: '<color>'; inherits: true; initial-value: #0a0c12; }
+
+html {
+  transition: --shell-strip 700ms var(--ease-1), --shell-bar 700ms var(--ease-1);
+}
+
+/*
+ * ------------------------------------------------------- the bar inside the night page
+ *
+ * The playback-detail page is a night room in every theme, and the bar floats *above* it (`--z-player`
+ * is greater than `--z-overlay`), so it is the one piece of the shell that is always seen next to that
+ * room. Left on the theme's own tokens it stayed the brightest object on a dark screen — a cream slab
+ * across the bottom of a night scene.
+ *
+ * Two different sources feed it, which is what makes this an adaptation rather than a black override:
+ *
+ *  - the bar's own surface is `--shell-bar`, published by `applyShell` in the ui store: the backdrop the
+ *    bar is standing on, *measured* from the compositor at its brightness, carried by the current cover's
+ *    hue. Neither half is optional — a bare sample of that band is nearly neutral (the veil over it is 90%
+ *    ink) and read as grey plastic, while a bare token is what made it look like a different surface in the
+ *    first place. At 90% alpha over a blurred copy of the same colour the bar reads as the room's own
+ *    bottom edge.
+ *  - surfaces, ink and hairlines come from the skin's own **dark** palette (`--night-*`, published by
+ *    `applyTheme`), so the bar's controls still belong to the skin rather than to a hardcoded night.
+ *    The literals here are only fallbacks for the default skin, which declares no palette at all.
+ *
+ * The accent (`--amb-accent`, the *artwork's* dominant colour) still drives the hairlines, blooms and
+ * highlights, so they travel with the cover exactly as the page's do — over the same 900 ms transition.
+ *
+ * Every control in the bar reads these tokens (the quality picker included), so this one block is enough
+ * to move the whole surface instead of enumerating its children.
+ */
+html[data-night='on'] .player-bar {
+  /* Measured backdrop + the cover's hue; always written, so no fallback chain is needed here. */
+  --shell-surface: var(--shell-bar);
+  --bg: var(--shell-surface);
+  /*
+   * The surfaces carry a little of the same accent — 8%, which is the strength at which it reads as
+   * "this panel is in the same light" rather than "this panel is coloured". Without it the bar is warm
+   * dark on a purple room: correct in value, wrong in hue, which is exactly what "does not match the
+   * page" looks like. With it, the bar's own surface moves when the song does.
+   */
+  --panel: color-mix(in srgb, var(--night-panel, #14181f) 92%, var(--amb-accent, #8fa6ff));
+  --panel-soft: color-mix(in srgb, var(--night-panel-soft, #11151b) 92%, var(--amb-accent, #8fa6ff));
+  --card: color-mix(in srgb, var(--night-card, #14181f) 92%, var(--amb-accent, #8fa6ff));
+  --card-soft: color-mix(in srgb, var(--night-card-soft, #11151b) 92%, var(--amb-accent, #8fa6ff));
+  --line: var(--night-line, rgba(244, 245, 250, .12));
+  --line-strong: var(--night-line-strong, rgba(244, 245, 250, .2));
+  --text: var(--night-text, #f4f5fa);
+  --muted: var(--night-muted, rgba(244, 245, 250, .62));
+  --faint: var(--night-faint, rgba(244, 245, 250, .42));
+  --glass: var(--night-glass, rgba(10, 12, 18, .78));
+  --glass-strong: var(--night-glass-strong, rgba(10, 12, 18, .94));
+  --glass-line: var(--night-glass-line, rgba(244, 245, 250, .12));
+  /*
+   * The surface itself, from the sample. The 10% that stays open is what lets `backdrop-filter` show
+   * through and keeps the bar reading as glass rather than as a second background — the blur is of the
+   * very colour this is painted with, so the two agree.
+   */
+  --player-bg: color-mix(in srgb, var(--shell-surface) 90%, transparent);
+  --shadow-soft: 0 10px 24px rgba(0, 0, 0, .34);
+  /* Status colours follow the mode too, or a "this quality is available" tick goes muddy on dark. */
+  --success: var(--night-success, #7ddba4);
+  --warn: var(--night-warn, #f0c274);
+  --danger: var(--night-danger, #f2808e);
+  --accent: var(--amb-accent, #8fa6ff);
+  --accent-strong: color-mix(in srgb, var(--amb-accent, #8fa6ff) 84%, #ffffff);
+  --accent-soft: color-mix(in srgb, var(--amb-accent, #8fa6ff) 18%, transparent);
+  --accent-line: color-mix(in srgb, var(--amb-accent, #8fa6ff) 32%, transparent);
+  color: var(--text);
+  transition: --amb-accent 900ms var(--ease-1);
+  /*
+   * …and it runs the *full width* of the window, which is the layout half of the same idea.
+   *
+   * `left: var(--sidebar-w)` is the shell's alignment rule: the bar starts where the content column starts so
+   * the two never drift apart. This page has no content column to align with — it is a full-screen layer that
+   * covers the sidebar — so the offset degenerated into a 264 px notch of nothing at the bottom-left of the
+   * room, and the bar visibly stopped short of the corner it was painting. Full width is what "aligned" means
+   * for a layout that has no left column.
+   */
+  left: 0;
+}
+
+/*
+ * The transport takes the golden share of the bar: the two side blocks are equal and modest (they
+ * hold a cover/title and a few icon buttons) while the centre gets ~1.6x their width, which is where
+ * the eye actually lives during playback.
+ */
+/*
+ * The left zone is now cover + info + the quality trigger + the heart, so it takes a slightly larger
+ * share than it used to; the transport keeps the golden share because it is still where the eye lives.
+ */
+.now-playing { display: flex; align-items: center; gap: 11px; width: 24%; min-width: 252px; }
+
+.player-cover {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: var(--panel-soft);
+  background-size: cover;
+  background-position: center;
+  color: var(--faint);
+  /* A lit rim rather than a plain inset border: the cover is the one image in the bar, so it should
+     look like it is sitting in the surface instead of pasted onto it. */
+  box-shadow: inset 0 0 0 1px var(--glass-line), 0 6px 16px rgba(0, 0, 0, .22), 0 0 22px var(--accent-soft);
+}
+
+.now-meta { min-width: 0; flex: 1; }
+.now-meta strong { display: block; overflow: hidden; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.now-meta span { display: block; overflow: hidden; margin-top: 4px; color: var(--muted); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+
+.heart-button { padding: 6px; color: var(--muted); font-size: 17px; }
+.heart-button:hover { color: #e899b2; }
+.heart-button.active { color: #ef7fa4; }
+
+/*
+ * The three zones: cover + info, transport over progress, volume + mode + queue.
+ *
+ * The bar is 100px tall because the centre stacks two real rows (transport, then the progress line) —
+ * the sides just have to look deliberate next to that, so both are vertically centred with their own
+ * inner rhythm rather than stretched.
+ */
+.now-playing,
+.player-actions {
+  align-self: stretch;
+  height: 100%;
+}
+
+.transport { flex: 1; min-width: 300px; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+
+.transport-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+.transport-buttons > button { color: var(--muted); font-size: 14px; padding: 4px 6px; }
+.transport-buttons > button:hover:not(:disabled) { color: var(--text); }
+
+.mode-button { font-size: 15px !important; }
+.mode-button:hover { color: var(--accent) !important; }
+
+/* The play mode is a setting about the queue, so it wears the same pill as the queue button. */
+.mode-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: var(--panel-soft);
+  color: var(--muted) !important;
+  font-size: 11px !important;
+  white-space: nowrap;
+}
+.mode-label:hover { color: var(--accent) !important; background: var(--accent-soft); }
+
+.play-button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent-strong) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 16px rgba(131, 100, 235, .38);
+  font-size: 12px !important;
+}
+.play-button:hover:not(:disabled) { background: var(--accent) !important; transform: scale(1.04); }
+.play-button.wide { width: auto; padding: 0 18px; border-radius: 8px; height: 32px; }
+
+.progress-line { display: flex; align-items: center; gap: 10px; margin-top: 6px; color: var(--faint); font-size: 10px; }
+.progress-line > span:first-child { width: 38px; text-align: right; }
+.progress-line > span:last-child { width: 38px; }
+
+.progress-range, .volume-slider, .slider-row input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--line-strong);
+  cursor: pointer;
+}
+.progress-range { flex: 1; }
+.volume-slider { width: 86px; }
+
+.progress-range::-webkit-slider-thumb, .volume-slider::-webkit-slider-thumb, .slider-row input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px transparent;
+  transition: box-shadow .15s ease;
+}
+.progress-range:hover::-webkit-slider-thumb, .volume-slider:hover::-webkit-slider-thumb { box-shadow: 0 0 0 4px var(--accent-soft); }
+.progress-range:disabled { opacity: .5; }
+
+.player-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  width: 31%;
+  min-width: 292px;
+  color: var(--muted);
+}
+
+/*
+ * Three groups, three decisions: switch view (词/桌), steer the queue (mode + queue), shape the sound
+ * (mute + volume).
+ *
+ * Previously all seven controls sat in one row with equal gaps, which read as one long undifferentiated
+ * strip. The dividers are the cheapest way to say "these belong together" without adding boxes.
+ */
+.action-group { display: flex; align-items: center; gap: 8px; }
+.action-divider {
+  width: 1px;
+  height: 20px;
+  flex: 0 0 1px;
+  background: linear-gradient(180deg, transparent, var(--glass-line) 35%, var(--glass-line) 65%, transparent);
+  pointer-events: none;
+}
+
+/*
+ * Below 1240px the right zone gives up its least important group before anything collides with the
+ * transport: the lyrics shortcuts first, then the numeric volume readout. The mode button stays —
+ * it is the only control here that changes behaviour rather than convenience.
+ */
+@media (max-width: 1240px) {
+  .player-actions { min-width: 214px; gap: var(--space-2); }
+  .action-divider.after-lyrics,
+  .lyrics-group { display: none; }
+}
+
+@media (max-width: 1040px) {
+  .now-playing { width: 28%; min-width: 190px; }
+  .volume-value { display: none; }
+  .volume-slider { width: 66px; }
+  .mode-label { max-width: 74px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* Below this the quality trigger keeps only its icon — the whole label goes, not half of it (clipping
+     left half a glyph on screen, which reads as a rendering bug rather than as a compact control). */
+  .quality-trigger .q-label { display: none; }
+  .quality-trigger { padding: 0 6px; }
+}
+
+/*
+ * The right zone is a single row that must not wrap.
+ *
+ * Every control here except the slider is a short label, and a label that shrinks wraps at every
+ * character — which is how "队列 20" turned into a circle with 队 / 列 / 20 stacked on three lines.
+ * So: the labels refuse to shrink and stay on one line, and the volume slider — the only genuinely
+ * elastic control — absorbs the squeeze instead.
+ */
+.player-actions > * { flex-shrink: 0; white-space: nowrap; }
+.player-actions .volume-slider { flex-shrink: 1; min-width: 48px; }
+
+.queue-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: var(--panel-soft);
+  color: var(--muted);
+  font-size: 11px;
+}
+.queue-button:hover, .queue-button.active { color: var(--accent); background: var(--accent-soft); }
+
+.volume-value { width: 34px; color: var(--faint); font-size: 10px; text-align: right; }
+
+/*
+ * 睡眠定时（☾）。
+ *
+ * Armed, the button grows a countdown instead of a dot: at night the question is "how long left", and a
+ * bare "on" indicator makes you open the menu to answer it. `tabular-nums` keeps the seconds from
+ * jittering the button's width every tick — a control that twitches once a second reads as broken.
+ */
+.sleep-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+}
+.sleep-button:hover { color: var(--text); background: var(--panel-soft); }
+.sleep-button.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.sleep-countdown { font-size: 10px; font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+
+.sleep-popover {
+  position: absolute;
+  right: var(--content-gutter);
+  bottom: calc(100% + 10px);
+  z-index: var(--z-overlay);
+  width: 232px;
+  padding: var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  animation: fade-in var(--dur-1) var(--ease-1);
+}
+.sleep-popover header { display: flex; align-items: baseline; gap: 8px; }
+.sleep-popover header strong { font-size: var(--text-sm); }
+.sleep-popover header em { margin-left: auto; color: var(--accent); font-size: 10px; font-style: normal; font-variant-numeric: tabular-nums; }
+.sleep-popover .sleep-hint { margin: 4px 0 var(--space-2); color: var(--faint); font-size: 10px; line-height: 1.5; }
+.sleep-options { display: grid; gap: 3px; margin: 0; padding: 0; list-style: none; }
+.sleep-option {
+  width: 100%;
+  padding: 6px 9px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: var(--panel-soft);
+  color: var(--text);
+  font-size: var(--text-xs);
+  text-align: left;
+}
+.sleep-option:hover { border-color: var(--accent-line); }
+.sleep-option.active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.sleep-option.danger { color: var(--warn); }
+
+/*
+ * Below 1240px the bar already sheds the lyrics group; the sleep button keeps its icon and loses the
+ * countdown, because "a timer is running" is the part that must survive the squeeze.
+ */
+@media (max-width: 1240px) {
+  .sleep-countdown { display: none; }
+}
+
+/* ------------------------------------------------------------ utilities */
+
+/*
+ * One centred column for every page.
+ *
+ * The width cap is what keeps a row scannable on a 2560px monitor (see `--content-max`), and the
+ * bottom padding is derived from the player's own height so content can never hide behind the bar or
+ * leave a dead strip under it.
+ */
+.view {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  /* No player-bar offset here any more: `.main-content` already ends above the bar. */
+  padding: var(--space-6) var(--content-gutter) var(--space-6);
+  min-height: 100%;
+}
+
+.spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--accent-soft);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.muted { color: var(--muted); }
+.faint { color: var(--faint); }
+.small-text { font-size: 11px; }
+.warn { color: var(--warn); font-style: normal; }
+.hidden-input { display: none; }
+
+.primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 15px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-strong);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background .16s ease, transform .16s ease;
+}
+.primary-button:hover:not(:disabled) { background: var(--accent); transform: translateY(-1px); }
+.primary-button.small { padding: 7px 12px; font-size: 11px; }
+
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 14px;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  border-radius: var(--radius-sm);
+  color: var(--accent);
+  font-size: 12px;
+}
+.secondary-button:hover:not(:disabled) { background: var(--accent-soft); }
+
+.ghost-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 13px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  font-size: 12px;
+}
+.ghost-button:hover:not(:disabled) { color: var(--text); border-color: var(--line-strong); background: var(--panel-soft); }
+.ghost-button.small { padding: 6px 10px; font-size: 11px; }
+.ghost-button.danger { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 34%, transparent); }
+.ghost-button.danger:hover:not(:disabled) { background: color-mix(in srgb, var(--danger) 12%, transparent); }
+
+/*
+ * A disabled *labelled* button must not be a faded accent fill.
+ *
+ * The global rule is `button:disabled { opacity: .45 }`, which is right for the icon buttons in the player bar
+ * — it reads as "dimmed". On the filled buttons it does something else entirely: white ink over the accent at
+ * 45% becomes grey text on a purple slab, i.e. it looks like a *broken* control rather than an unavailable
+ * one. (Measured on the shipped build: `随机播放全部` with an empty library rendered exactly like that, and the
+ * same look appears for a frame or two before the library arrives over IPC.) So these three get a real disabled
+ * state instead: the page's own greys, at full opacity, with the cursor that says why.
+ */
+.primary-button:disabled,
+.secondary-button:disabled,
+.ghost-button:disabled {
+  opacity: 1;
+  cursor: not-allowed;
+  background: var(--panel-soft);
+  border-color: var(--line);
+  color: var(--faint);
+  transform: none;
+}
+
+.text-button { color: var(--muted); font-size: 11px; }
+.text-button:hover:not(:disabled) { color: var(--accent); }
+.text-button span { margin-left: 5px; color: var(--accent); }
+
+.icon-action {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  color: var(--faint);
+  font-size: 12px;
+}
+.icon-action:hover { color: var(--text); background: var(--accent-soft); }
+.icon-action.favored { color: #ef7fa4; }
+.icon-action.danger:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 14%, transparent); }
+
+.segmented {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-soft);
+}
+.segmented button { padding: 6px 13px; border-radius: 999px; color: var(--muted); font-size: 11px; }
+.segmented button:hover { color: var(--text); }
+.segmented button.active { background: var(--accent-strong); color: #fff; font-weight: 600; }
+
+/* The custom frame-cap field: a short number box, not a full-width text input. */
+.frame-rate-input { width: 6rem; text-align: center; letter-spacing: 0.04em; }
+
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 13px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 12px;
+}
+.chip:hover { border-color: color-mix(in srgb, var(--accent) 40%, transparent); background: var(--accent-soft); }
+.chip small { color: var(--faint); font-size: 10px; }
+
+.select-wrap { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 11px; }
+.select-wrap select {
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--panel-soft);
+  color: var(--text);
+  font-size: 11px;
+  outline: 0;
+}
+
+/*
+ * Only the search field needs a breakpoint now: the sidebar and the player bar follow `--sidebar-w`,
+ * which already narrows with the window, so re-declaring them here would be redundant.
+ */
+@media (max-width: 1200px) {
+  .search-wrap { width: 260px; }
+}
+
+/* ------------------------------------------------------------------ design tokens v2
+   Scales added with the source system / search / lyrics work so new components stop
+   inventing one-off values (no more margin: 17px / 19px in the same view). */
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 22px;
+  --space-6: 30px;
+
+  --radius-xs: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  --text-xs: 10px;
+  --text-sm: 11px;
+  --text-md: 12px;
+  --text-lg: 14px;
+  --text-xl: 19px;
+  --text-2xl: 26px;
+  --text-3xl: 34px;
+
+  --dur-1: 120ms;
+  --dur-2: 180ms;
+  --dur-3: 260ms;
+  --dur-lyrics: 420ms;
+  --ease-1: cubic-bezier(.22, .61, .36, 1);
+
+  --z-sticky: 20;
+  --z-drawer: 40;
+  --z-modal: 120;
+  --z-overlay: 200;
+  /*
+   * The player bar sits above `--z-overlay` on purpose.
+   *
+   * The immersive lyrics page is itself a full-screen fixed layer at `--z-overlay` (200), so while the bar
+   * was at 20 the whole bar — and the quality popover anchored inside it — was *below* the page. The page's
+   * containers are transparent, so they swallowed every click: the picker was visible but nothing in it
+   * could be clicked with a mouse. Everything that floats over the page has to sit above it.
+   */
+  --z-player: 240;
+}

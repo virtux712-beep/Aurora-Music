@@ -1,0 +1,104 @@
+{
+  "name": "aurora-music",
+  "version": "0.1.0",
+  "description": "A modern, local-first desktop music player.",
+  "author": "Aurora Music",
+  "main": "out/main/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build && electron-builder",
+    "build:dir": "electron-vite build && electron-builder --dir",
+    "typecheck": "vue-tsc --noEmit && tsc --noEmit -p tsconfig.node.json",
+    "lint": "eslint . --ext .ts,.vue",
+    "preview": "electron-vite preview",
+    "smoke:media": "esbuild tools/protocol-smoke.ts --bundle --platform=node --format=esm --target=node20 --external:electron --outfile=tools/.build/protocol-smoke.mjs && electron tools/.build/protocol-smoke.mjs",
+    "smoke:sources": "esbuild tools/sources-smoke.ts --bundle --platform=node --format=esm --target=node20 --external:electron --external:music-metadata --outfile=tools/.build/sources-smoke.mjs && electron tools/.build/sources-smoke.mjs",
+    "smoke:theme": "esbuild tools/theme-smoke.ts --bundle --platform=node --format=esm --target=node20 --outfile=tools/.build/theme-smoke.mjs && node tools/.build/theme-smoke.mjs",
+    "smoke:quality": "esbuild tools/quality-smoke.ts --bundle --platform=node --format=esm --target=node20 --outfile=tools/.build/quality-smoke.mjs && node tools/.build/quality-smoke.mjs",
+    "smoke:visual": "esbuild tools/visual-smoke.ts --bundle --platform=node --format=esm --target=node20 --outfile=tools/.build/visual-smoke.mjs && node tools/.build/visual-smoke.mjs",
+    "smoke:audio": "esbuild tools/audio-smoke.ts --bundle --platform=node --format=esm --target=node20 --external:electron --outfile=tools/.build/audio-smoke.mjs && electron tools/.build/audio-smoke.mjs",
+    "smoke:lyrics": "esbuild tools/lyrics-smoke.ts --bundle --platform=node --format=esm --target=node20 --external:electron --external:music-metadata --outfile=tools/.build/lyrics-smoke.mjs && electron tools/.build/lyrics-smoke.mjs",
+    "smoke:scripts": "esbuild tools/scripts-smoke.ts --bundle --platform=node --format=esm --target=node20 --external:electron --outfile=tools/.build/scripts-smoke.mjs && esbuild src/preload/script-host.ts --bundle --platform=node --format=cjs --target=node20 --external:electron --outfile=tools/.build/script-host.cjs && electron tools/.build/scripts-smoke.mjs",
+    "smoke:app": "node tools/packaged-app-check.mjs",
+    "check:boards": "esbuild tools/boards-check.ts --bundle --platform=node --format=esm --target=node20 --external:electron --external:music-metadata --outfile=tools/.build/boards-check.mjs && electron tools/.build/boards-check.mjs",
+    "check:asar": "node tools/inspect-asar.cjs",
+    "check:icon": "node tools/check-icon.mjs",
+    "make:icon": "node tools/make-icon.mjs",
+    "check:lx": "esbuild src/preload/script-host.ts --bundle --platform=node --format=cjs --target=node20 --external:electron --outfile=tools/.build/script-host.cjs && esbuild tools/lx-real-check.ts --bundle --platform=node --format=esm --target=node20 --external:electron --external:music-metadata --outfile=tools/.build/lx-real-check.mjs && electron tools/.build/lx-real-check.mjs",
+    "check:lx-library": "esbuild src/preload/script-host.ts --bundle --platform=node --format=cjs --target=node20 --external:electron --outfile=tools/.build/script-host.cjs && esbuild tools/lx-library-check.ts --bundle --platform=node --format=esm --target=node20 --external:electron --external:music-metadata --outfile=tools/.build/lx-library-check.mjs && electron tools/.build/lx-library-check.mjs",
+    "check:asar-esm": "electron tools/asar-esm-check.mjs",
+    "verify": "npm run typecheck && npm run lint && npm run smoke:theme && npm run smoke:quality && npm run smoke:media && npm run smoke:sources && npm run smoke:scripts && npm run smoke:visual && npm run smoke:audio && npm run smoke:lyrics && npm run build && npm run smoke:app && npm run check:sound && npm run check:lyric-offset && npm run check:maintenance && npm run check:features",
+    "check:sound": "node tools/sound-check.mjs",
+    "check:lyric-offset": "node tools/lyric-offset-check.mjs",
+    "check:maintenance": "node tools/maintenance-check.mjs",
+    "check:features": "node tools/feature-status-check.mjs",
+    "check:focus": "node tools/focus-freeze-check.mjs",
+    "check:idle": "node tools/idle-cost-check.mjs --rounds 1 --seconds 4",
+    "release:pack": "node tools/make-release.mjs",
+    "release:verify": "node tools/make-release.mjs --verify"
+  },
+  "dependencies": {
+    "music-metadata": "^11.15.0",
+    "node-sqlite3-wasm": "^0.8.60",
+    "pinia": "^2.3.1",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@electron-toolkit/preload": "^3.0.2",
+    "@electron-toolkit/tsconfig": "^1.0.1",
+    "@typescript-eslint/parser": "^8.24.0",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "electron": "^34.5.8",
+    "electron-builder": "^25.1.8",
+    "electron-vite": "^3.1.0",
+    "eslint": "^9.20.1",
+    "eslint-plugin-vue": "^10.0.0",
+    "typescript": "~5.7.2",
+    "vue-eslint-parser": "^10.1.1",
+    "vue-tsc": "^2.2.0"
+  },
+  "build": {
+    "appId": "com.aurora.music",
+    "productName": "Aurora Music",
+    "asar": true,
+    "files": [
+      "out/**/*"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "afterPack": "tools/after-pack.cjs",
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false,
+      "artifactName": "Aurora-Music-Portable-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "artifactName": "Aurora-Music-Setup-${version}-${arch}.${ext}",
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "Aurora Music",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  },
+  "allowScripts": {
+    "electron@34.5.8": true,
+    "esbuild@0.25.12": true
+  }
+}
