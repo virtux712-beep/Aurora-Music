@@ -1,1 +1,24 @@
-{"dependencies":{"@capacitor/android":"^7.0.0","@capacitor/core":"^7.0.0","buffer":"^6.0.3","music-metadata-browser":"^2.5.10"},"description":"Capacitor Android shell for Aurora Music: bundles the desktop renderer with a WebView bridge (shim/) so the existing UI runs on Android.","devDependencies":{"@capacitor/cli":"^7.0.0","esbuild":"^0.25.0"},"name":"aurora-music-android-shell","private":true,"scripts":{"add:android":"cap add android","build:shim":"esbuild shim/aurora-shim.ts --bundle --platform=browser --format=iife --target=es2020 --outfile=www-build/aurora-shim.js","prepare:www":"node scripts/prepare-www.mjs","sync":"cap sync android"},"type":"module","version":"0.1.0"}
+{
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "buffer": "^6.0.3",
+    "music-metadata-browser": "^2.5.10"
+  },
+  "description": "Capacitor Android shell for Aurora Music: bundles the desktop renderer with a WebView bridge (shim/) so the existing UI runs on Android.",
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.6.0"
+  },
+  "name": "aurora-music-android-shell",
+  "private": true,
+  "scripts": {
+    "add:android": "cap add android",
+    "build:shim": "esbuild shim/aurora-shim.ts --bundle --platform=browser --format=iife --target=es2020 --outfile=www-build/aurora-shim.js",
+    "prepare:www": "node scripts/prepare-www.mjs",
+    "sync": "cap sync android"
+  },
+  "type": "module",
+  "version": "0.1.0"
+}
