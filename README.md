@@ -22,6 +22,20 @@
   <a href="docs/RELEASE-NOTES-0.1.0.md"><b>📝 发布说明</b></a>
 </p>
 
+## 界面预览
+
+<p align="center">
+  <img src="docs/images/app-screenshot.png" alt="主界面" width="820" />
+</p>
+
+| 沉浸式歌词 | 黑胶播放 |
+| :---: | :---: |
+| <img src="docs/images/shot-lyrics.png" alt="沉浸式歌词" width="400" /> | <img src="docs/images/shot-vinyl.png" alt="黑胶播放" width="400" /> |
+
+| 歌单 | 搜索与主题 |
+| :---: | :---: |
+| <img src="docs/images/shot-playlists.png" alt="歌单" width="400" /> | <img src="docs/images/shot-search.png" alt="搜索" width="400" /> |
+
 ## 为什么选 Aurora
 
 - 🎧 **本地优先**：音乐库、封面、收藏、历史、歌单、队列全部保存在本机，离线可用，不依赖任何云服务
