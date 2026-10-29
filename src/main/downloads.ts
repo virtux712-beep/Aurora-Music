@@ -9,6 +9,7 @@ import { AUDIO_EXTENSION_SET } from '../shared/constants'
 import type { AudioTrack, DownloadSettings, DownloadStartInput, DownloadTask } from '../shared/types'
 import { writeId3v23, type CoverArt } from './id3'
 import { importAudioFiles, notifyLibraryChanged } from './library'
+import { recordDiagnostics } from './diagnostics'
 import { upstreamForMediaUrl } from './remote'
 import { allSecrets } from './secretStore'
 import { getSettings, updateSettings } from './settings'
@@ -237,6 +238,8 @@ function asRecord(value: unknown): DownloadRecord | null {
 }
 
 let pendingWrite: Promise<void> = Promise.resolve()
+/** A failed index write is recorded once per session, not on every progress tick. */
+let indexWriteFailureLogged = false
 
 function persist(): void {
   if (!indexFile) return
@@ -244,7 +247,15 @@ function persist(): void {
     version: INDEX_VERSION,
     tasks: [...records.values()].map((record) => ({ task: record.task, track: record.track, upstreamUrl: record.upstreamUrl })),
   }
-  pendingWrite = writeFile(indexFile, JSON.stringify(payload, null, 2), 'utf8').catch(() => undefined)
+  pendingWrite = writeFile(indexFile, JSON.stringify(payload, null, 2), 'utf8').catch((error: unknown) => {
+    // Losing the index means interrupted downloads forget they exist; that must leave a
+    // trace in diagnostics instead of vanishing silently.
+    if (!indexWriteFailureLogged) {
+      indexWriteFailureLogged = true
+      recordDiagnostics('main', 'downloads-index-write', error instanceof Error ? error.message : String(error))
+    }
+    return undefined
+  })
 }
 
 /**

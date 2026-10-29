@@ -1,5 +1,5 @@
 import { net } from 'electron'
-import { createHash } from 'node:crypto'
+import { randomBytes } from 'node:crypto'
 import { MEDIA_SCHEME } from '../shared/constants'
 
 /**
@@ -13,20 +13,33 @@ interface RemoteEntry {
   kind: 'audio' | 'image'
   sourceId: string
   registeredAt: number
+  /** The registration key, kept so eviction can drop the reverse mapping too. */
+  key: string
 }
 
 const MAX_ENTRIES = 2000
 const registry = new Map<string, RemoteEntry>()
+/** Registration key -> token, so re-registering the same URL reuses its token. */
+const tokenByKey = new Map<string, string>()
 
 export function registerRemote(url: string, kind: RemoteEntry['kind'], sourceId: string): string {
-  const token = createHash('sha1').update(`${kind}:${sourceId}:${url}`).digest('hex').slice(0, 32)
-  if (registry.has(token)) return token
+  const key = `${kind}:${sourceId}:${url}`
+  const existing = tokenByKey.get(key)
+  if (existing && registry.has(existing)) return existing
+  // Random, not derived: a token computed from (kind, sourceId, url) could be recomputed by
+  // anyone who learns those three, which defeats the point of an opaque token.
+  const token = randomBytes(16).toString('hex')
   if (registry.size >= MAX_ENTRIES) {
     // Cheap FIFO eviction keeps memory bounded during long browsing sessions.
     const oldest = registry.keys().next().value
-    if (oldest) registry.delete(oldest)
+    if (oldest) {
+      const evicted = registry.get(oldest)
+      registry.delete(oldest)
+      if (evicted) tokenByKey.delete(evicted.key)
+    }
   }
-  registry.set(token, { url, kind, sourceId, registeredAt: Date.now() })
+  registry.set(token, { url, kind, sourceId, registeredAt: Date.now(), key })
+  tokenByKey.set(key, token)
   return token
 }
 

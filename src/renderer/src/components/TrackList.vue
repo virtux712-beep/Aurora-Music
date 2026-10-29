@@ -115,9 +115,15 @@ function onContextMenu(event: MouseEvent, track: AudioTrack): void {
   emit('contextmenu', track, event.clientX, event.clientY)
 }
 
+/**
+ * Selection as a set: rows are checked one by one during render, so `includes()` on the
+ * raw list would make every render O(rows × selected) on large libraries.
+ */
+const selectedSet = computed(() => new Set(props.selectedIds))
+
 /** A row's checkbox state, read from the id list the owner keeps. */
 function isSelected(track: AudioTrack): boolean {
-  return props.selectedIds.includes(track.id)
+  return selectedSet.value.has(track.id)
 }
 
 /**
@@ -125,10 +131,10 @@ function isSelected(track: AudioTrack): boolean {
  * a plain unticked box would tell the user "nothing is selected" while the batch bar says otherwise.
  */
 const allVisibleSelected = computed(
-  () => props.tracks.length > 0 && props.tracks.every((track) => props.selectedIds.includes(track.id)),
+  () => props.tracks.length > 0 && props.tracks.every((track) => selectedSet.value.has(track.id)),
 )
 const someVisibleSelected = computed(
-  () => !allVisibleSelected.value && props.tracks.some((track) => props.selectedIds.includes(track.id)),
+  () => !allVisibleSelected.value && props.tracks.some((track) => selectedSet.value.has(track.id)),
 )
 
 function onRowClick(event: MouseEvent, row: { track: AudioTrack; index: number }): void {

@@ -455,6 +455,8 @@ export interface SourceDescriptor {
   config: Record<string, SourceConfigValue>
   /** Secret fields that already hold a value (`key -> true`); values are never sent to the UI. */
   secretKeys: Record<string, boolean>
+  /** True when a stored secret for this source is kept unencrypted (this machine has no OS keychain). */
+  secretsPlain?: boolean
   health?: SourceHealth
   /** How the source is hosted (`builtin` / `declarative` / `script`). */
   kind: SourceKind

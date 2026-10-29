@@ -4,6 +4,7 @@ import { basename, extname, join } from 'node:path'
 import { mkdir, readFile, readdir, realpath, stat, writeFile } from 'node:fs/promises'
 import { parseFile } from 'music-metadata'
 import { readMeta, readTracks, trackFingerprints, writeMeta, writeTracks } from './database'
+import { recordDiagnostics } from './diagnostics'
 import type { AudioTrack, ImportProgress, LibraryImportResult } from '../shared/types'
 import { AUDIO_EXTENSION_SET, MAX_IMPORT_FILES, MAX_SCAN_DEPTH } from '../shared/constants'
 import { audioUrl, authorizeAudio, coverUrl, releaseAudio } from './media'
@@ -129,6 +130,8 @@ async function mirrorStamp(): Promise<string> {
 
 /** The serialization last written, so a save with unchanged content does not touch the disk. */
 let lastMirrorPayload = ''
+/** A failed mirror write is recorded once per session, not on every library change. */
+let mirrorWriteFailureLogged = false
 
 async function persist(): Promise<void> {
   const payload: LibraryFile = { version: LIBRARY_VERSION, tracks: library }
@@ -152,8 +155,14 @@ async function persist(): Promise<void> {
     await writeFile(libraryFile, body, 'utf8')
     lastMirrorPayload = body
     writeMeta('library-mirror-stamp', await mirrorStamp())
-  } catch {
-    // A failed write must never break playback; the in-memory library stays valid.
+  } catch (error) {
+    // A failed write must never break playback; the in-memory library stays valid. It is
+    // recorded once, though: a mirror that silently stops updating makes a later launch
+    // recover a stale library, which looks like deleted tracks coming back.
+    if (!mirrorWriteFailureLogged) {
+      mirrorWriteFailureLogged = true
+      recordDiagnostics('main', 'library-mirror-write', error instanceof Error ? error.message : String(error))
+    }
   }
 }
 

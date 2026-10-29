@@ -1,5 +1,6 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
+import { reportPersistFailure } from '../utils/persist'
 
 const PLAYLISTS_KEY = 'aurora:playlists'
 
@@ -38,8 +39,10 @@ export const usePlaylistStore = defineStore('playlists', () => {
   function persist(): void {
     try {
       localStorage.setItem(PLAYLISTS_KEY, JSON.stringify(playlists.value))
-    } catch {
-      // Ignore quota problems; playlists stay in memory for this session.
+    } catch (error) {
+      // Playlists stay in memory for this session, but the failure is no longer silent:
+      // the user is warned once and the failure lands in diagnostics (see utils/persist).
+      reportPersistFailure('playlists-persist', error)
     }
   }
 

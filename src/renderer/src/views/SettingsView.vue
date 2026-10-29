@@ -46,6 +46,7 @@ import {
 } from '../visual/budget'
 import type { FrameSnapshot } from '../visual/frame'
 import { formatCount, formatTime } from '../utils/format'
+import { downloadTextFile } from '../utils/download'
 import { DEFAULT_DESKTOP_LYRICS, DEFAULT_SYSTEM_INTEGRATION } from '../../../shared/types'
 import type { DesktopLyricsSettings, SystemIntegrationSettings, SystemIntegrationStatus } from '../../../shared/types'
 
@@ -726,13 +727,7 @@ function exportPlaylists(): void {
     ui.notify('还没有歌单可以导出', 'info')
     return
   }
-  const blob = new Blob([playlists.exportJson()], { type: 'application/json' })
-  const url = URL.createObjectURL(blob)
-  const anchor = document.createElement('a')
-  anchor.href = url
-  anchor.download = `aurora-playlists-${new Date().toISOString().slice(0, 10)}.json`
-  anchor.click()
-  URL.revokeObjectURL(url)
+  downloadTextFile(`aurora-playlists-${new Date().toISOString().slice(0, 10)}.json`, playlists.exportJson())
   ui.notify('歌单已导出', 'success')
 }
 

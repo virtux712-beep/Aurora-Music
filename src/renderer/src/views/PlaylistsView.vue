@@ -6,6 +6,7 @@ import TrackList from '../components/TrackList.vue'
 import { useLibraryStore } from '../stores/library'
 import { usePlaylistStore } from '../stores/playlists'
 import { useTrackActions } from '../composables/useTrackActions'
+import { downloadTextFile } from '../utils/download'
 
 const library = useLibraryStore()
 const playlists = usePlaylistStore()
@@ -66,14 +67,7 @@ function removeFromPlaylist(track: AudioTrack): void {
 }
 
 function exportJson(): void {
-  const payload = playlists.exportJson()
-  const blob = new Blob([payload], { type: 'application/json' })
-  const url = URL.createObjectURL(blob)
-  const anchor = document.createElement('a')
-  anchor.href = url
-  anchor.download = `aurora-playlists-${new Date().toISOString().slice(0, 10)}.json`
-  anchor.click()
-  URL.revokeObjectURL(url)
+  downloadTextFile(`aurora-playlists-${new Date().toISOString().slice(0, 10)}.json`, playlists.exportJson())
   ui.notify('歌单已导出为 JSON 文件', 'success')
 }
 

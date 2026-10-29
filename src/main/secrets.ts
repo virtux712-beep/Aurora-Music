@@ -49,3 +49,8 @@ export function decryptSecret(stored: unknown): string {
 export function isSecretStored(stored: unknown): boolean {
   return typeof stored === 'string' && (stored.startsWith(PLAIN_PREFIX) || stored.startsWith(ENCRYPTED_PREFIX))
 }
+
+/** True when a stored value sits on disk unencrypted because no OS keychain was available. */
+export function isPlainStored(stored: unknown): boolean {
+  return typeof stored === 'string' && stored.startsWith(PLAIN_PREFIX)
+}

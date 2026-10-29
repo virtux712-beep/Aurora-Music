@@ -3,6 +3,7 @@ import { readFile, stat, writeFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
 import { join } from 'node:path'
 import type { DatabaseStats } from '../shared/maintenance'
+import { recordDiagnostics } from './diagnostics'
 
 /**
  * The library's database.
@@ -46,6 +47,8 @@ interface SqliteDatabase {
 }
 
 let database: SqliteDatabase | null = null
+/** A failed track write is recorded once per session, not on every library change. */
+let trackWriteFailureLogged = false
 let engine: 'sqlite' | 'json' = 'json'
 let databasePath = ''
 let engineDetail = ''
@@ -238,8 +241,14 @@ export function writeTracks(tracks: unknown[]): boolean {
     }
     database.exec('commit')
     return true
-  } catch {
+  } catch (error) {
     database.exec('rollback')
+    // The caller only sees `false`; without this entry a broken database write looks like
+    // tracks randomly reverting on the next launch, with nothing to investigate.
+    if (!trackWriteFailureLogged) {
+      trackWriteFailureLogged = true
+      recordDiagnostics('main', 'library-tracks-write', error instanceof Error ? error.message : String(error))
+    }
     return false
   }
 }

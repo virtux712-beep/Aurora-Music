@@ -16,6 +16,7 @@ import type {
   SourceStatus,
 } from '../../shared/types'
 import { caches } from '../cache'
+import { secretStorageIsPlain } from '../secretStore'
 import { getEntry } from './registry'
 import { repairRefusedHosts } from './autoRepair'
 import { hostAutoGrantAllowed } from './policy'
@@ -174,6 +175,7 @@ export function describeSources(
       configSchema: { fields: schemaFields(source) },
       config,
       secretKeys,
+      secretsPlain: secretStorageIsPlain(source.meta.id),
       requiresConfig: source.meta.requiresConfig,
       configured: isConfigured(source, context.config),
       enabled: isEnabled(source.meta.id, settings),

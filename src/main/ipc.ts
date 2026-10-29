@@ -178,9 +178,24 @@ let pendingLxLibrary: { path: string; text: string } | null = null
 /**
  * Only the top frame of our own window may call these handlers, so an injected
  * iframe or a stray renderer cannot reach the filesystem through IPC.
+ *
+ * The frame check alone only proves "top frame"; the URL check below proves it is *our* top
+ * frame. Navigation away is already blocked (`will-navigate` is denied in main/index.ts), so
+ * this is depth in depth: if a future window or webview ever loads remote content while
+ * sharing this preload, these handlers stay unreachable from it.
  */
+function isAppFrameUrl(rawUrl: string): boolean {
+  const devBase = process.env.ELECTRON_RENDERER_URL
+  if (devBase) return rawUrl.startsWith(devBase)
+  if (!rawUrl.startsWith('file://')) return false
+  // Packaged pages live under out/renderer (index.html, desktop-lyrics.html); allow any page
+  // of the bundle, with an optional query/hash (the SPA router never changes the path).
+  return /\/out\/renderer\/[^/?#]+\.html(?:[?#]|$)/.test(rawUrl)
+}
+
 function assertTrustedSender(event: IpcMainInvokeEvent): boolean {
-  return event.senderFrame !== null && event.senderFrame === event.sender.mainFrame
+  if (event.senderFrame === null || event.senderFrame !== event.sender.mainFrame) return false
+  return isAppFrameUrl(event.senderFrame.url)
 }
 
 /**

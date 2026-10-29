@@ -317,10 +317,18 @@ export function registerDesktopLyrics(getMainWindow: () => BrowserWindow | null)
     lyricsWindow?.webContents.send('desktop-lyrics:track', lastTrack)
   })
 
-  // Shared with the app window's settings UI, so any of our renderers may patch appearance.
-  ipcMain.handle('desktop-lyrics:set-options', (_event, patch: unknown) =>
-    patchOptions((patch ?? {}) as Partial<DesktopLyricsSettings>),
-  )
+  /** The app window may also patch appearance (its settings UI owns the same controls). */
+  const fromMainWindow = (event: { sender: Electron.WebContents }): boolean => {
+    const main = mainWindowGetter?.() ?? null
+    return Boolean(main && !main.isDestroyed() && event.sender.id === main.webContents.id)
+  }
+
+  // Shared with the app window's settings UI, so either of our two renderers may patch
+  // appearance — but it still has to be one of ours, like every other channel here.
+  ipcMain.handle('desktop-lyrics:set-options', (event, patch: unknown) => {
+    if (!fromLyricsWindow(event) && !fromMainWindow(event)) return undefined
+    return patchOptions((patch ?? {}) as Partial<DesktopLyricsSettings>)
+  })
 
   ipcMain.handle('desktop-lyrics:hide', async (event) => {
     if (!fromLyricsWindow(event)) return

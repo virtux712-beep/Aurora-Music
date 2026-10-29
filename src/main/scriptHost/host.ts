@@ -37,6 +37,12 @@ import { SCRIPT_HOST_CRYPTO } from './cryptoLite'
  *    to the handlers below — where the source's confirmed permissions and host allowlist are enforced.
  *  - A script that hangs cannot freeze Aurora: every call is raced against a timeout and loses the
  *    window when it fires. A crashed window is marked and rebuilt on the next call.
+ *  - The host document's CSP allows `unsafe-eval` / `unsafe-inline` because LX-style scripts
+ *    are evaluated as source text — a deliberate compatibility trade, not an oversight. It is
+ *    only acceptable while every invariant above holds at once: no Node access, every network
+ *    request cancelled at the session layer, all permission requests denied, timeouts that
+ *    destroy the window. Weakening any one of them re-opens the sandbox, so changes here must
+ *    preserve all of them (the smoke suite covers the network and permission halves).
  *
  * Hosts are created lazily, capped, and destroyed after a period of inactivity, because each one
  * costs a renderer process.

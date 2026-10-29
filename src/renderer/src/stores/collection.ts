@@ -1,5 +1,6 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
+import { reportPersistFailure } from '../utils/persist'
 
 const FAVORITES_KEY = 'aurora:favorites'
 const HISTORY_KEY = 'aurora:history'
@@ -24,8 +25,9 @@ function readJson<T>(key: string, fallback: T): T {
 function writeJson(key: string, value: unknown): void {
   try {
     localStorage.setItem(key, JSON.stringify(value))
-  } catch {
-    // Quota errors must not break playback.
+  } catch (error) {
+    // Quota errors must not break playback — but they must not be invisible either.
+    reportPersistFailure('collection-persist', error)
   }
 }
 

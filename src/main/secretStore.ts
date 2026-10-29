@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { decryptSecret, encryptSecret, isSecretStored } from './secrets'
+import { decryptSecret, encryptSecret, isPlainStored, isSecretStored } from './secrets'
 
 /**
  * Source secrets live in their own file, separate from `settings.json`, and each value is encrypted
@@ -43,6 +43,17 @@ export function getSecrets(sourceId: string): Record<string, string> {
     if (plain) result[key] = plain
   }
   return result
+}
+
+/**
+ * True when any secret stored for the source sits on disk unencrypted (no OS keychain on
+ * this machine). The settings UI uses this to label storage honestly instead of always
+ * claiming "encrypted".
+ */
+export function secretStorageIsPlain(sourceId: string): boolean {
+  const stored = data[sourceId]
+  if (!stored) return false
+  return Object.values(stored).some((value) => isPlainStored(value))
 }
 
 /** Every source's secrets, for calls that need to describe or enumerate sources. */

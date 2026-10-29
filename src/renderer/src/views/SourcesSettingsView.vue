@@ -926,7 +926,8 @@ onMounted(async () => {
             <span class="config-label">
               {{ field.label }}
               <em v-if="field.required !== false" class="required">必填</em>
-              <em v-if="field.secret && source.secretKeys[field.key]" class="secret-set">已配置（加密存储）</em>
+              <em v-if="field.secret && source.secretKeys[field.key] && !source.secretsPlain" class="secret-set">已配置（加密存储）</em>
+              <em v-if="field.secret && source.secretKeys[field.key] && source.secretsPlain" class="secret-set">已配置（明文存储：本机没有系统密钥环，密钥以明文保存在本机文件中）</em>
             </span>
             <input
               v-if="field.type !== 'boolean'"
