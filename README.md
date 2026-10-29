@@ -24,6 +24,7 @@
   <a href="docs/USER-GUIDE.md"><b>📖 使用手册</b></a> ·
   <a href="#-功能亮点"><b>✨ 功能亮点</b></a> ·
   <a href="#-架构一览"><b>🏗 架构一览</b></a> ·
+  <a href="CHANGELOG.md"><b>📝 更新日志</b></a> ·
   <a href="docs/README.md"><b>📚 文档中心</b></a>
 </p>
 
@@ -85,15 +86,23 @@
 
 ## ⬇️ 下载
 
-当前版本 **v0.1.0**，适用于 Windows 10 / 11（x64）：
+当前版本 **v0.2.0**，适用于 Windows 10 / 11（x64）：
 
 | 版本 | 说明 | 下载 |
 | --- | --- | --- |
-| **安装版** | NSIS 安装程序，一路下一步 | [Aurora-Music-Setup-0.1.0-x64.exe](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/download/v0.1.0/Aurora-Music-Setup-0.1.0-x64.exe) |
-| **便携版** | 解压即用，免安装 | [portable.zip](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/download/v0.1.0/portable.zip) |
-| **源码包** | 完整源码（与本仓库一致） | [Aurora-Music-0.1.0-source.zip](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/download/v0.1.0/Aurora-Music-0.1.0-source.zip) |
+| **安装版** | NSIS 安装程序，推荐日常使用 | [Aurora-Music-Setup-0.2.0-x64.exe](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/download/v0.2.0/Aurora-Music-Setup-0.2.0-x64.exe) |
+| **便携版** | 免安装绿色版，双击即用 | [Aurora-Music-Portable-0.2.0-x64.exe](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/download/v0.2.0/Aurora-Music-Portable-0.2.0-x64.exe) |
+| **源码包** | 完整源码（与本仓库一致） | [Aurora-Music-0.2.0-source.zip](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/download/v0.2.0/Aurora-Music-0.2.0-source.zip) |
+| **校验文件** | SHA-256 完整性校验 | [SHA256SUMS.txt](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/download/v0.2.0/SHA256SUMS.txt) |
 
-历史版本与更新内容见 [Releases](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases) 与 [发布说明](docs/RELEASE-NOTES-0.1.0.md)。
+## 📜 版本历史
+
+| 版本 | 发布日期 | 亮点 | 详情 |
+| --- | --- | --- | --- |
+| **v0.2.0** | 2026-10-29 | 迷你播放器窗口 · 可访问性全面改进 · 端到端测试扩至 278 项，功能状态 52/52 | [发布页](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/tag/v0.2.0) |
+| **v0.1.0** | 2026-09-18 | 首个公开版本：本地曲库、插件化音源、沉浸式歌词、下载管理 | [发布页](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/tag/v0.1.0) · [发布说明](docs/RELEASE-NOTES-0.1.0.md) |
+
+每个版本的完整改动说明见 [更新日志 CHANGELOG](CHANGELOG.md)，历史版本文件见 [Releases](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases)。
 
 ## ✨ 功能亮点
 
@@ -106,6 +115,7 @@
 ### 播放与歌词
 
 - 双声道交叉淡化与无缝衔接；列表循环 / 单曲循环 / 随机 / 顺序，队列拖动排序，重启自动恢复
+- 迷你播放器：独立置顶小窗（封面 / 进度 / 上一首 / 下一首），与主窗口共享播放状态，位置与置顶自动记住
 - 系统托盘、任务栏缩略图按钮、全局媒体键、Media Session 全支持
 - 沉浸式歌词：模糊封面背景、逐字高亮、点击歌词跳转；独立桌面歌词窗口可锁定
 - 响度均衡、睡眠定时、主题与视觉引擎（粒子 / 帧率治理）
@@ -152,6 +162,7 @@ npm run verify       # 类型检查 + Lint + 全部冒烟测试 + 构建
 
 全部文档见 [文档中心](docs/README.md)：
 
+- [更新日志](CHANGELOG.md)：每个版本的改动说明与版本历史
 - [使用手册](docs/USER-GUIDE.md)：安装、导入、播放、歌词与音源的完整说明
 - [开发文档](docs/DEVELOPMENT.md)：架构、数据落盘位置、测试体系
 - [发布说明 v0.1.0](docs/RELEASE-NOTES-0.1.0.md)
