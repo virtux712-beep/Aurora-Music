@@ -11,8 +11,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases"><img src="https://img.shields.io/github/v/release/virtux712-beep/Aurora-Music-v0.1.0" alt="最新版本" /></a>
-  <a href="https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases"><img src="https://img.shields.io/github/downloads/virtux712-beep/Aurora-Music-v0.1.0/total" alt="下载量" /></a>
+  <a href="https://github.com/virtux712-beep/Aurora-Music/releases"><img src="https://img.shields.io/github/v/release/virtux712-beep/Aurora-Music" alt="最新版本" /></a>
+  <a href="https://github.com/virtux712-beep/Aurora-Music/releases"><img src="https://img.shields.io/github/downloads/virtux712-beep/Aurora-Music/total" alt="下载量" /></a>
   <img src="https://img.shields.io/badge/Electron-34-47848F?logo=electron&logoColor=white" alt="Electron 34" />
   <img src="https://img.shields.io/badge/Vue-3-4FC08D?logo=vuedotjs&logoColor=white" alt="Vue 3" />
   <img src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" alt="TypeScript 5" />
@@ -90,20 +90,20 @@
 
 | 版本 | 说明 | 下载 |
 | --- | --- | --- |
-| **安装版** | NSIS 安装程序，推荐日常使用 | [Aurora-Music-Setup-0.3.0-x64.exe](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/download/v0.3.0/Aurora-Music-Setup-0.3.0-x64.exe) |
-| **便携版** | 免安装绿色版，双击即用 | [Aurora-Music-Portable-0.3.0-x64.exe](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/download/v0.3.0/Aurora-Music-Portable-0.3.0-x64.exe) |
-| **源码包** | 完整源码（与本仓库一致） | [Aurora-Music-0.3.0-source.zip](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/download/v0.3.0/Aurora-Music-0.3.0-source.zip) |
-| **校验文件** | SHA-256 完整性校验 | [SHA256SUMS.txt](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/download/v0.3.0/SHA256SUMS.txt) |
+| **安装版** | NSIS 安装程序，推荐日常使用 | [Aurora-Music-Setup-0.3.0-x64.exe](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.3.0/Aurora-Music-Setup-0.3.0-x64.exe) |
+| **便携版** | 免安装绿色版，双击即用 | [Aurora-Music-Portable-0.3.0-x64.exe](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.3.0/Aurora-Music-Portable-0.3.0-x64.exe) |
+| **源码包** | 完整源码（与本仓库一致） | [Aurora-Music-0.3.0-source.zip](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.3.0/Aurora-Music-0.3.0-source.zip) |
+| **校验文件** | SHA-256 完整性校验 | [SHA256SUMS.txt](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.3.0/SHA256SUMS.txt) |
 
 ## 📜 版本历史
 
 | 版本 | 发布日期 | 亮点 | 详情 |
 | --- | --- | --- | --- |
-| **v0.3.0** | 2026-10-30 | 视觉与主题 2.0：10 套内置主题 · 统一 SVG 图标 · 胶片模式 · 沉浸播放页与歌词效果升级（候选版） | [发布页](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/tag/v0.3.0) |
-| **v0.2.0** | 2026-10-29 | 迷你播放器窗口 · 可访问性全面改进 · 端到端测试扩至 278 项，功能状态 52/52 | [发布页](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/tag/v0.2.0) |
-| **v0.1.0** | 2026-09-18 | 首个公开版本：本地曲库、插件化音源、沉浸式歌词、下载管理 | [发布页](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/tag/v0.1.0) · [发布说明](docs/RELEASE-NOTES-0.1.0.md) |
+| **v0.3.0** | 2026-10-30 | 视觉与主题 2.0：10 套内置主题 · 统一 SVG 图标 · 胶片模式 · 沉浸播放页与歌词效果升级（候选版） | [发布页](https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.3.0) |
+| **v0.2.0** | 2026-10-29 | 迷你播放器窗口 · 可访问性全面改进 · 端到端测试扩至 278 项，功能状态 52/52 | [发布页](https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.2.0) |
+| **v0.1.0** | 2026-09-18 | 首个公开版本：本地曲库、插件化音源、沉浸式歌词、下载管理 | [发布页](https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.1.0) · [发布说明](docs/RELEASE-NOTES-0.1.0.md) |
 
-每个版本的完整改动说明见 [更新日志 CHANGELOG](CHANGELOG.md)，历史版本文件见 [Releases](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases)。
+每个版本的完整改动说明见 [更新日志 CHANGELOG](CHANGELOG.md)，历史版本文件见 [Releases](https://github.com/virtux712-beep/Aurora-Music/releases)。
 
 ## ✨ 功能亮点
 

@@ -2,7 +2,7 @@
 
 ## 支持的版本
 
-仅最新发布版本接受安全修复，请先升级到 [最新版本](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases) 再确认问题是否仍然存在。
+仅最新发布版本接受安全修复，请先升级到 [最新版本](https://github.com/virtux712-beep/Aurora-Music/releases) 再确认问题是否仍然存在。
 
 ## 报告安全问题
 

@@ -12,7 +12,7 @@ Aurora Music 的所有重要改动都会记录在这里。
 
 ## [0.3.0] - 2026-10-30
 
-视觉与主题 2.0。完整说明见 [v0.3.0 发布页](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/tag/v0.3.0)。
+视觉与主题 2.0。完整说明见 [v0.3.0 发布页](https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.3.0)。
 
 > 当前状态：0.3.0 候选版。静态检查与专项测试已通过，但最终 3 轮 `smoke:app` 尚未全绿；正式发布前仍需修复已知问题并重新跑满 3 轮。
 
@@ -65,7 +65,7 @@ Aurora Music 的所有重要改动都会记录在这里。
 - **下载**：队列并发、断点续传、暂停 / 继续 / 重试，文件名模板，MP3 自动写入 ID3 标签（含封面）
 - **管理**：收藏、播放历史、歌单（JSON 导入导出）、音乐统计、完整备份 / 恢复；可选的本机只读 HTTP API（默认关闭，仅 127.0.0.1 + 令牌）
 
-[未发布]: https://github.com/virtux712-beep/Aurora-Music-v0.1.0/compare/v0.3.0...HEAD
-[0.3.0]: https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/tag/v0.3.0
-[0.2.0]: https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/tag/v0.2.0
-[0.1.0]: https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/tag/v0.1.0
+[未发布]: https://github.com/virtux712-beep/Aurora-Music/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.3.0
+[0.2.0]: https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.2.0
+[0.1.0]: https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.1.0
