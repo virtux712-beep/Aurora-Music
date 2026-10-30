@@ -86,19 +86,20 @@
 
 ## ⬇️ 下载
 
-当前版本 **v0.2.0**，适用于 Windows 10 / 11（x64）：
+当前版本 **v0.3.0**，适用于 Windows 10 / 11（x64）：
 
 | 版本 | 说明 | 下载 |
 | --- | --- | --- |
-| **安装版** | NSIS 安装程序，推荐日常使用 | [Aurora-Music-Setup-0.2.0-x64.exe](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/download/v0.2.0/Aurora-Music-Setup-0.2.0-x64.exe) |
-| **便携版** | 免安装绿色版，双击即用 | [Aurora-Music-Portable-0.2.0-x64.exe](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/download/v0.2.0/Aurora-Music-Portable-0.2.0-x64.exe) |
-| **源码包** | 完整源码（与本仓库一致） | [Aurora-Music-0.2.0-source.zip](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/download/v0.2.0/Aurora-Music-0.2.0-source.zip) |
-| **校验文件** | SHA-256 完整性校验 | [SHA256SUMS.txt](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/download/v0.2.0/SHA256SUMS.txt) |
+| **安装版** | NSIS 安装程序，推荐日常使用 | [Aurora-Music-Setup-0.3.0-x64.exe](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/download/v0.3.0/Aurora-Music-Setup-0.3.0-x64.exe) |
+| **便携版** | 免安装绿色版，双击即用 | [Aurora-Music-Portable-0.3.0-x64.exe](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/download/v0.3.0/Aurora-Music-Portable-0.3.0-x64.exe) |
+| **源码包** | 完整源码（与本仓库一致） | [Aurora-Music-0.3.0-source.zip](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/download/v0.3.0/Aurora-Music-0.3.0-source.zip) |
+| **校验文件** | SHA-256 完整性校验 | [SHA256SUMS.txt](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/download/v0.3.0/SHA256SUMS.txt) |
 
 ## 📜 版本历史
 
 | 版本 | 发布日期 | 亮点 | 详情 |
 | --- | --- | --- | --- |
+| **v0.3.0** | 2026-10-30 | 视觉与主题 2.0：10 套内置主题 · 统一 SVG 图标 · 胶片模式 · 沉浸播放页与歌词效果升级（候选版） | [发布页](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/tag/v0.3.0) |
 | **v0.2.0** | 2026-10-29 | 迷你播放器窗口 · 可访问性全面改进 · 端到端测试扩至 278 项，功能状态 52/52 | [发布页](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/tag/v0.2.0) |
 | **v0.1.0** | 2026-09-18 | 首个公开版本：本地曲库、插件化音源、沉浸式歌词、下载管理 | [发布页](https://github.com/virtux712-beep/Aurora-Music-v0.1.0/releases/tag/v0.1.0) · [发布说明](docs/RELEASE-NOTES-0.1.0.md) |
 
@@ -119,6 +120,9 @@
 - 系统托盘、任务栏缩略图按钮、全局媒体键、Media Session 全支持
 - 沉浸式歌词：模糊封面背景、逐字高亮、点击歌词跳转；独立桌面歌词窗口可锁定
 - 响度均衡、睡眠定时、主题与视觉引擎（粒子 / 帧率治理）
+- 主题系统 2.0（v0.3.0）：10 套内置主题、Theme Schema v2、主题中心（实时预览 / 对比度提示 / 导入导出），旧版用户主题继续兼容
+- 胶片模式（v0.3.0）：颗粒、暗角、上下遮幅与冷暖色调，独立开关，低能耗自动降级
+- 统一 SVG 图标与动效系统（v0.3.0）：核心操作不再依赖 Unicode 字形；页面进入动效、焦点环与弹窗焦点管理，尊重「减少动态」偏好
 
 ### 在线与音源系统
 
