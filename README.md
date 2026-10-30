@@ -21,10 +21,12 @@
 
 <p align="center">
   <a href="#-下载"><b>⬇️ 下载安装</b></a> ·
+  <a href="#-三步开始"><b>🚀 三步开始</b></a> ·
   <a href="docs/USER-GUIDE.md"><b>📖 使用手册</b></a> ·
   <a href="#-功能亮点"><b>✨ 功能亮点</b></a> ·
   <a href="#-架构一览"><b>🏗 架构一览</b></a> ·
   <a href="CHANGELOG.md"><b>📝 更新日志</b></a> ·
+  <a href="#-常见问题"><b>❓ 常见问题</b></a> ·
   <a href="docs/README.md"><b>📚 文档中心</b></a>
 </p>
 
@@ -58,6 +60,40 @@
   <img src="docs/images/shot-search.png" alt="聚合搜索" width="880" />
   <br/><sub><b>聚合搜索</b> · 五家平台一次搜齐</sub>
 </p>
+
+## 🎨 主题墙 · 视觉与主题 2.0
+
+v0.3.0 内置 **10 套主题**，在主题中心一键切换，还能导入你自己的主题：
+
+<table align="center">
+  <tr>
+    <td align="center" width="20%">🌌<br/><b>极光</b></td>
+    <td align="center" width="20%">🌠<br/><b>星河入梦</b></td>
+    <td align="center" width="20%">🍂<br/><b>晚秋拾叶</b></td>
+    <td align="center" width="20%">🌅<br/><b>潮汐晨光</b></td>
+    <td align="center" width="20%">🌧️<br/><b>烟雨江南</b></td>
+  </tr>
+  <tr>
+    <td align="center" width="20%">🌇<br/><b>落日长歌</b></td>
+    <td align="center" width="20%">🌊<br/><b>深海回声</b></td>
+    <td align="center" width="20%">🌲<br/><b>晨雾森林</b></td>
+    <td align="center" width="20%">🌃<br/><b>霓虹雨夜</b></td>
+    <td align="center" width="20%">🌙<br/><b>纸上月光</b></td>
+  </tr>
+</table>
+
+- **主题中心**：实时迷你播放器预览、正文对比度不足提示、导出当前主题、复制主题 JSON、用户主题导入 / 删除
+- **Theme Schema v2**：动效配方、玻璃 / 阴影层级、歌词默认效果、胶片显示参数、图标色调、布局密度；旧 v1 用户主题继续兼容
+- **歌词效果可覆盖**：跟随主题 / 聚焦 / 纸张 / 水波 / 水墨 / 胶片字幕 / 霓虹
+
+### 🎬 胶片模式
+
+> 独立开关，不依赖主题。打开之后，整个播放界面像放一部老电影：
+
+- 胶片颗粒、暗角、上下遮幅
+- 暖色 / 冷色 grade，轻微门闪（gate weave）
+- 24 / 30fps 视觉节奏，暂停时冻结
+- 低能耗模式自动关闭颗粒与门闪
 
 ## 💡 为什么选 Aurora
 
@@ -94,6 +130,16 @@
 | **便携版** | 免安装绿色版，双击即用 | [Aurora-Music-Portable-0.3.0-x64.exe](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.3.0/Aurora-Music-Portable-0.3.0-x64.exe) |
 | **源码包** | 完整源码（与本仓库一致） | [Aurora-Music-0.3.0-source.zip](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.3.0/Aurora-Music-0.3.0-source.zip) |
 | **校验文件** | SHA-256 完整性校验 | [SHA256SUMS.txt](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.3.0/SHA256SUMS.txt) |
+
+## 🚀 三步开始
+
+<table align="center">
+  <tr>
+    <td align="center" width="33%"><h3>1️⃣ 下载并启动</h3>从上方下载安装版或便携版<br/>双击启动（Windows 10 / 11 x64）</td>
+    <td align="center" width="33%"><h3>2️⃣ 导入本地音乐</h3>选文件或整个文件夹导入<br/>封面与歌曲信息自动读取</td>
+    <td align="center" width="33%"><h3>3️⃣ 开听</h3>本地音乐立刻能听<br/>在线音乐去「设置 → 音源管理」装你自己的音源</td>
+  </tr>
+</table>
 
 ## 📜 版本历史
 
@@ -138,6 +184,38 @@
 - 收藏、播放历史、歌单（JSON 导入导出）、音乐统计一应俱全
 - 完整备份 / 恢复；可选的本机只读 HTTP API（默认关闭，仅 127.0.0.1 + 令牌）
 
+## ❓ 常见问题
+
+<details>
+<summary><b>需要联网吗？本地音乐能离线听吗？</b></summary>
+<br/>不需要。曲库、封面、收藏、歌单全部保存在本机，本地音乐离线可用；只有在线搜索与音源功能才需要网络。
+</details>
+
+<details>
+<summary><b>为什么有些歌搜得到却放不了？</b></summary>
+<br/>内置的只有五家平台<b>搜索</b>（酷我 / 网易云 / QQ / 酷狗 / 咪咕，仅搜索与元数据，本身放不出声音）。可播放的音源由你自行在「设置 → 音源管理」中安装，装完即时生效。
+</details>
+
+<details>
+<summary><b>支持哪些系统？</b></summary>
+<br/>Windows 10 / 11（x64），提供 NSIS 安装版与免安装便携版。
+</details>
+
+<details>
+<summary><b>下载的文件怎么校验完整性？</b></summary>
+<br/>每个版本的发布页附带 <code>SHA256SUMS.txt</code> 校验文件，下载后对比哈希一致即可确认文件完整、未被篡改。
+</details>
+
+<details>
+<summary><b>我的数据存在哪里？会上传吗？</b></summary>
+<br/>全部保存在本机，不依赖任何云服务。应用内提供完整备份 / 恢复；具体的落盘位置见 <a href="docs/DEVELOPMENT.md">开发文档</a>。
+</details>
+
+<details>
+<summary><b>遇到问题或想要新功能，去哪反馈？</b></summary>
+<br/>到 <a href="https://github.com/virtux712-beep/Aurora-Music/issues">Issues</a> 用模板提交 Bug 报告或功能请求；贡献流程见 <a href="CONTRIBUTING.md">贡献指南</a>。
+</details>
+
 ## 🏗 架构一览
 
 ```mermaid
@@ -153,7 +231,7 @@ flowchart LR
 
 三层隔离是 Aurora 的地基：**Node 能力只存在于主进程**，渲染层只能通过受校验的桥接 API 访问文件与网络；脚本音源再单独关进一个断网的沙箱窗口，全部外联经主进程按主机授权放行。细节见 [开发文档](docs/DEVELOPMENT.md) 与 [音源运行时设计](docs/SOURCE-RUNTIME-DESIGN.md)。
 
-## 🚀 快速开始（开发）
+## 🛠 快速开始（开发）
 
 ```bash
 npm install
