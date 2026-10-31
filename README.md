@@ -28,9 +28,9 @@
   <a href="docs/USER-GUIDE.md"><b>📖 使用手册</b></a> ·
   <a href="#-版本特色"><b>🧭 版本特色</b></a> ·
   <a href="#-功能亮点"><b>✨ 功能亮点</b></a> ·
+  <a href="#-常见问题"><b>❓ 常见问题</b></a> ·
   <a href="#-架构一览"><b>🏗 架构一览</b></a> ·
   <a href="CHANGELOG.md"><b>📝 更新日志</b></a> ·
-  <a href="#-常见问题"><b>❓ 常见问题</b></a> ·
   <a href="docs/README.md"><b>📚 文档中心</b></a>
 </p>
 
