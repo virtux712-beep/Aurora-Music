@@ -13,6 +13,8 @@
 <p align="center">
   <a href="https://github.com/virtux712-beep/Aurora-Music/releases"><img src="https://img.shields.io/github/v/release/virtux712-beep/Aurora-Music" alt="最新版本" /></a>
   <a href="https://github.com/virtux712-beep/Aurora-Music/releases"><img src="https://img.shields.io/github/downloads/virtux712-beep/Aurora-Music/total" alt="下载量" /></a>
+  <a href="https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.4.0%E7%A8%B3%E5%AE%9A%E7%89%88"><img src="https://img.shields.io/badge/%E5%BD%93%E5%89%8D%E7%89%88%E6%9C%AC-v0.4.0%20%E7%A8%B3%E5%AE%9A%E7%89%88-2ea44f" alt="当前版本 v0.4.0 稳定版" /></a>
+  <img src="https://img.shields.io/badge/npm%20audit-0%20vulnerabilities-brightgreen" alt="npm audit 0 漏洞" />
   <img src="https://img.shields.io/badge/Electron-34-47848F?logo=electron&logoColor=white" alt="Electron 34" />
   <img src="https://img.shields.io/badge/Vue-3-4FC08D?logo=vuedotjs&logoColor=white" alt="Vue 3" />
   <img src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" alt="TypeScript 5" />
@@ -20,9 +22,11 @@
 </p>
 
 <p align="center">
+  <a href="#-项目信息"><b>📊 项目信息</b></a> ·
   <a href="#-下载"><b>⬇️ 下载安装</b></a> ·
   <a href="#-三步开始"><b>🚀 三步开始</b></a> ·
   <a href="docs/USER-GUIDE.md"><b>📖 使用手册</b></a> ·
+  <a href="#-版本特色"><b>🧭 版本特色</b></a> ·
   <a href="#-功能亮点"><b>✨ 功能亮点</b></a> ·
   <a href="#-架构一览"><b>🏗 架构一览</b></a> ·
   <a href="CHANGELOG.md"><b>📝 更新日志</b></a> ·
@@ -38,6 +42,20 @@
     <td align="center" width="25%"><h3>🛡️ 安全默认开启</h3>脚本音源隔离沙箱运行<br/>联网逐主机授权，密钥加密保存</td>
   </tr>
 </table>
+
+## 📊 项目信息
+
+| 项目 | 内容 |
+| --- | --- |
+| 当前版本 | **v0.4.0 稳定版**（2026-10-31 发布） |
+| 版本历程 | 共 5 个公开版本：v0.1.0（2026-09-18 首发）→ v0.2.0 → v0.3.0 → v0.3.1 → v0.4.0 |
+| 支持平台 | Windows 10 / 11（x64），提供安装版与便携版 |
+| 安装包体积 | 安装版约 82 MB · 便携版约 82 MB · 源码包约 2.1 MB |
+| 技术栈 | Electron 34 · Vue 3 · TypeScript 5 · SQLite |
+| 功能完整度 | 52 / 52（功能状态全绿） |
+| 质量基线 | 源码回归 295/295 × 3 轮 · npm audit 0 漏洞（v0.4.0 实测） |
+| 发布通道 | GitHub Releases（仅此官方渠道） |
+| 反馈渠道 | [Issues](https://github.com/virtux712-beep/Aurora-Music/issues)（Bug 报告 / 功能请求模板） |
 
 ## 📸 界面预览
 
@@ -63,7 +81,7 @@
 
 ## 🎨 主题墙 · 视觉与主题 2.0
 
-v0.3.0 内置 **10 套主题**，在主题中心一键切换，还能导入你自己的主题：
+自 v0.3.0 起内置 **10 套主题**，在主题中心一键切换，还能导入你自己的主题（v0.3.1 起主题中心带健康诊断）：
 
 <table align="center">
   <tr>
@@ -122,14 +140,17 @@ v0.3.0 内置 **10 套主题**，在主题中心一键切换，还能导入你�
 
 ## ⬇️ 下载
 
-当前版本 **v0.3.0**，适用于 Windows 10 / 11（x64）：
+当前版本 **v0.4.0 稳定版**（2026-10-31），适用于 Windows 10 / 11（x64）：
 
 | 版本 | 说明 | 下载 |
 | --- | --- | --- |
-| **安装版** | NSIS 安装程序，推荐日常使用 | [Aurora-Music-Setup-0.3.0-x64.exe](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.3.0/Aurora-Music-Setup-0.3.0-x64.exe) |
-| **便携版** | 免安装绿色版，双击即用 | [Aurora-Music-Portable-0.3.0-x64.exe](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.3.0/Aurora-Music-Portable-0.3.0-x64.exe) |
-| **源码包** | 完整源码（与本仓库一致） | [Aurora-Music-0.3.0-source.zip](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.3.0/Aurora-Music-0.3.0-source.zip) |
-| **校验文件** | SHA-256 完整性校验 | [SHA256SUMS.txt](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.3.0/SHA256SUMS.txt) |
+| **安装版** | NSIS 安装程序，推荐日常使用（约 82 MB） | [Aurora-Music-Setup-0.4.0-x64.exe](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.4.0%E7%A8%B3%E5%AE%9A%E7%89%88/Aurora-Music-Setup-0.4.0-x64.exe) |
+| **便携版** | 免安装绿色版，双击即用（约 82 MB） | [Aurora-Music-Portable-0.4.0-x64.exe](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.4.0%E7%A8%B3%E5%AE%9A%E7%89%88/Aurora-Music-Portable-0.4.0-x64.exe) |
+| **源码包** | 完整源码打包（约 2.1 MB） | [Aurora-Music-0.4.0-source.zip](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.4.0%E7%A8%B3%E5%AE%9A%E7%89%88/Aurora-Music-0.4.0-source.zip) |
+| **使用手册** | v0.4.0 随发布附带的用户手册 | [USER-GUIDE-0.4.0.md](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.4.0%E7%A8%B3%E5%AE%9A%E7%89%88/USER-GUIDE-0.4.0.md) |
+| **发布说明** | v0.4.0 随发布附带的完整说明 | [RELEASE-NOTES-0.4.0.md](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.4.0%E7%A8%B3%E5%AE%9A%E7%89%88/RELEASE-NOTES-0.4.0.md) |
+
+历史版本（v0.3.1 / v0.3.0 / v0.2.0 / v0.1.0）见 [Releases](https://github.com/virtux712-beep/Aurora-Music/releases)；各版本的特色对比见下方 [🧭 版本特色](#-版本特色)。
 
 ## 🚀 三步开始
 
@@ -141,13 +162,74 @@ v0.3.0 内置 **10 套主题**，在主题中心一键切换，还能导入你�
   </tr>
 </table>
 
-## 📜 版本历史
+## 🧭 版本特色
 
-| 版本 | 发布日期 | 亮点 | 详情 |
+五个公开版本，一条清晰的演进线：先把功能做全（v0.1.0–v0.2.0），再把视觉做透（v0.3.0–v0.3.1），最后把可靠性收口（v0.4.0）。
+
+| 版本 | 发布日期 | 主题 | 状态 |
 | --- | --- | --- | --- |
-| **v0.3.0** | 2026-10-30 | 视觉与主题 2.0：10 套内置主题 · 统一 SVG 图标 · 胶片模式 · 沉浸播放页与歌词效果升级（候选版） | [发布页](https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.3.0) |
-| **v0.2.0** | 2026-10-29 | 迷你播放器窗口 · 可访问性全面改进 · 端到端测试扩至 278 项，功能状态 52/52 | [发布页](https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.2.0) |
-| **v0.1.0** | 2026-09-18 | 首个公开版本：本地曲库、插件化音源、沉浸式歌词、下载管理 | [发布页](https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.1.0) · [发布说明](docs/RELEASE-NOTES-0.1.0.md) |
+| **v0.4.0** | 2026-10-31 | 播放可靠性与稳定性收口 | **稳定版 · 当前版本** |
+| **v0.3.1** | 2026-10-31 | 视觉一致性收口 | 稳定版 |
+| **v0.3.0** | 2026-10-30 | 视觉与主题 2.0 | 原候选版，已由 v0.3.1 收口 |
+| **v0.2.0** | 2026-10-29 | 迷你播放器与可访问性 | 稳定版 |
+| **v0.1.0** | 2026-09-18 | 首个公开版本 | 稳定版 |
+
+<details open>
+<summary><b>v0.4.0 稳定版 · 播放可靠性收口</b>（2026-10-31）— <a href="https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.4.0%E7%A8%B3%E5%AE%9A%E7%89%88">发布页</a></summary>
+
+- **播放倍速**：0.5× / 0.75× / 1.0× / 1.25× / 1.5× / 2.0× 六档，双 deck 同步、保持音高，重启后保留
+- **睡眠唤醒恢复**：系统睡眠时暂停，只有睡眠前正在播放才在唤醒后恢复；输出设备断开自动回退系统默认输出
+- **聚合搜索不再被慢源拖死**：单音源截止时间 + TIMEOUT 结果行；同一音源结果自动去重，重复项补齐封面、音质与播放地址
+- **歌词防串**：快速切歌有 request-token + track id 双守卫，旧歌曲的歌词不会落到新歌曲下
+- **单实例运行**：重复启动时聚焦已有窗口并退出，不再开两个 Aurora
+- **安全与性能收口**：依赖升级后 npm audit 0 漏洞；IPC 增加 renderer URL allowlist；频谱 / 唱盘暂停后释放 rAF；源码回归 295/295 × 3 轮
+
+</details>
+
+<details>
+<summary><b>v0.3.1 · 视觉一致性收口</b>（2026-10-31）— <a href="https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.3.1">发布页</a></summary>
+
+- **三套动效节奏**：列表 fade + rise、设置 fade + scale、歌词独立 Teleport 入场；时长与缓动统一到 `--dur-*` / `--ease-*` 令牌，`check:motion` 禁止裸写
+- **歌词逐字填充改用音频连续时钟**：不再受 4Hz `timeupdate` 阶梯影响；seek 后当前行、逐字填充与滚动位置保持一致
+- **频谱与唱盘打磨**：频谱改对数频段 + 峰值保持；唱盘新增 lead-in groove、locked run-out 与唱针自动抬起；暂停 / 低能耗自动释放帧循环
+- **语义令牌统一**：圆角、间距、阴影全量迁移到语义 token（`--shadow-panel` 等）；新增统一 EmptyState / LoadingState / ErrorState 组件
+- **设置页分区导航**：5 组 sticky 分区、14 个锚点，长设置页可跳转
+- **主题中心健康诊断**：「复制为自定义主题」；主题卡提示缺失 token、氛围配方缺失、对比度过低，坏主题可展开看具体原因；`check:accent` 主题色审计
+- **质量**：smoke:app 290/290 × 3 轮，a11y 路由审计 8/8
+
+</details>
+
+<details>
+<summary><b>v0.3.0 · 视觉与主题 2.0</b>（2026-10-30）— <a href="https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.3.0">发布页</a></summary>
+
+- **10 套内置主题**：极光、星河入梦、晚秋拾叶、潮汐晨光、烟雨江南、落日长歌、深海回声、晨雾森林、霓虹雨夜、纸上月光
+- **Theme Schema v2**：动效配方、玻璃 / 阴影层级、歌词默认效果、胶片参数、图标色调、布局密度；v1 用户主题继续兼容
+- **胶片模式**：颗粒、暗角、上下遮幅、冷暖 grade 与门闪，独立开关
+- **统一 SVG 图标**：核心操作不再依赖 Unicode 字形
+- **沉浸播放页与歌词效果升级**：歌词效果可覆盖（跟随主题 / 聚焦 / 纸张 / 水波 / 水墨 / 胶片字幕 / 霓虹）
+- 发布时为候选版；视觉一致性已由 v0.3.1 收口，当前稳定版为 v0.4.0
+
+</details>
+
+<details>
+<summary><b>v0.2.0 · 迷你播放器与可访问性</b>（2026-10-29）— <a href="https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.2.0">发布页</a></summary>
+
+- **迷你播放器窗口**：独立置顶小窗（封面 / 进度 / 上一首 / 下一首），与主窗口共享播放状态，位置与置顶自动记住 —— 功能清单的第 52 项就此补齐，功能状态 52/52
+- **可访问性全面改进**：主要路由自动审计 7/7 通过；播放栏、图标按钮、弹窗补齐可访问名；曲库与队列行支持键盘聚焦、Enter 播放、Delete 移除
+- **质量**：端到端检查扩至 278 项，新增未处理异常断言与三档宽度溢出检查
+
+</details>
+
+<details>
+<summary><b>v0.1.0 · 首个公开版本</b>（2026-09-18）— <a href="https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.1.0">发布页</a> · <a href="docs/RELEASE-NOTES-0.1.0.md">发布说明</a></summary>
+
+- **本地曲库**：文件 / 文件夹导入、music-metadata 元数据与内嵌封面、万首级虚拟滚动
+- **插件化音源系统**：声明式 JSON 清单音源零代码接入；JS 脚本音源（含洛雪风格）隔离沙箱运行、联网按主机授权
+- **沉浸式歌词**：三级歌词来源、逐行 / 逐字同步、桌面歌词窗口、F11 沉浸模式
+- **下载管理**：队列并发、断点续传、文件名模板、MP3 自动写 ID3 标签
+- **数据全本地**：收藏、历史、歌单、统计、完整备份 / 恢复；可选本机只读 HTTP API
+
+</details>
 
 每个版本的完整改动说明见 [更新日志 CHANGELOG](CHANGELOG.md)，历史版本文件见 [Releases](https://github.com/virtux712-beep/Aurora-Music/releases)。
 
@@ -166,6 +248,10 @@ v0.3.0 内置 **10 套主题**，在主题中心一键切换，还能导入你�
 - 系统托盘、任务栏缩略图按钮、全局媒体键、Media Session 全支持
 - 沉浸式歌词：模糊封面背景、逐字高亮、点击歌词跳转；独立桌面歌词窗口可锁定
 - 响度均衡、睡眠定时、主题与视觉引擎（粒子 / 帧率治理）
+- 播放倍速（v0.4.0）：0.5×–2.0× 六档，双 deck 同步、保持音高，设置重启后保留
+- 睡眠唤醒与设备恢复（v0.4.0）：系统睡眠自动暂停、唤醒按睡眠前状态恢复；输出设备断开自动回退系统默认输出
+- 单实例运行（v0.4.0）：重复启动自动聚焦已有窗口
+- 视觉一致性（v0.3.1）：三套页面动效节奏与统一动效令牌、语义阴影、统一空 / 加载 / 错误状态组件；设置页 5 组分区导航；频谱对数频段 + 峰值保持，唱盘拟真沟槽与唱针动作
 - 主题系统 2.0（v0.3.0）：10 套内置主题、Theme Schema v2、主题中心（实时预览 / 对比度提示 / 导入导出），旧版用户主题继续兼容
 - 胶片模式（v0.3.0）：颗粒、暗角、上下遮幅与冷暖色调，独立开关，低能耗自动降级
 - 统一 SVG 图标与动效系统（v0.3.0）：核心操作不再依赖 Unicode 字形；页面进入动效、焦点环与弹窗焦点管理，尊重「减少动态」偏好
@@ -176,6 +262,7 @@ v0.3.0 内置 **10 套主题**，在主题中心一键切换，还能导入你�
 - 声明式音源：一份 JSON 清单（URL 模板 + 字段映射 + 主机白名单）接入你自己的 API，不执行任何代码
 - 脚本音源：导入 `.js` 或整包导入洛雪音源库 `user_api.json`，沙箱实跑预览后再安装
 - 音源管理即时生效：启用 / 禁用 / 排序 / 配置表单 / 连通性测试 / 后台健康检查
+- 聚合搜索可靠性（v0.4.0）：单音源截止时间与 TIMEOUT 结果行，慢源不再拖死整张结果表；同源结果自动去重并补齐封面 / 音质 / 播放地址；快速切歌时歌词有双重守卫，不会串到下一首
 
 ### 下载与管理
 
@@ -203,7 +290,7 @@ v0.3.0 内置 **10 套主题**，在主题中心一键切换，还能导入你�
 
 <details>
 <summary><b>下载的文件怎么校验完整性？</b></summary>
-<br/>每个版本的发布页附带 <code>SHA256SUMS.txt</code> 校验文件，下载后对比哈希一致即可确认文件完整、未被篡改。
+<br/>请只从本仓库的 Releases 页面下载官方版本，发布资产以 GitHub 托管为准。若某个版本的发布页附带 <code>SHA256SUMS.txt</code> 校验文件，可下载后比对 SHA-256 哈希确认文件完整（当前 v0.4.0 未附带校验文件）。
 </details>
 
 <details>
@@ -248,6 +335,7 @@ npm run verify       # 类型检查 + Lint + 全部冒烟测试 + 构建
 - [使用手册](docs/USER-GUIDE.md)：安装、导入、播放、歌词与音源的完整说明
 - [开发文档](docs/DEVELOPMENT.md)：架构、数据落盘位置、测试体系
 - [发布说明 v0.1.0](docs/RELEASE-NOTES-0.1.0.md)
+- [使用手册 v0.4.0](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.4.0%E7%A8%B3%E5%AE%9A%E7%89%88/USER-GUIDE-0.4.0.md) · [发布说明 v0.4.0](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.4.0%E7%A8%B3%E5%AE%9A%E7%89%88/RELEASE-NOTES-0.4.0.md)（随 v0.4.0 发布页附带）
 - [音源运行时设计](docs/SOURCE-RUNTIME-DESIGN.md) · [视觉引擎](docs/visual-engine.md) · [洛雪对齐路线图](docs/LX-PARITY-ROADMAP.md)
 
 ## 🧱 技术栈

@@ -5,16 +5,73 @@ Aurora Music 的所有重要改动都会记录在这里。
 
 ## [未发布]
 
-### 仓库维护（2026-10-29，不改变软件功能）
+### 仓库维护（不改变软件功能）
 
-- 仓库呈现全面升级：极光头图、新版 README、文档中心、Issue / PR 模板、仓库简介与话题标签
-- 内部优化：IPC 发送方校验补强、本地保存失败时给出提示并记录诊断、密钥存储方式如实标注、远程媒体令牌改为随机生成、列表选中性能优化、依赖小版本更新
+- 2026-10-29：仓库呈现全面升级：极光头图、新版 README、文档中心、Issue / PR 模板、仓库简介与话题标签
+- 2026-10-29：内部优化：IPC 发送方校验补强、本地保存失败时给出提示并记录诊断、密钥存储方式如实标注、远程媒体令牌改为随机生成、列表选中性能优化、依赖小版本更新
+- 2026-10-31：README 大优化：新增项目信息面板与「版本特色」专区（五个版本逐版特色卡），下载区同步至 v0.4.0 稳定版，功能亮点补齐 v0.3.1 / v0.4.0 条目，文档中心补齐 v0.3.1 / v0.4.0
+
+## [0.4.0] - 2026-10-31
+
+稳定版。基于 v0.3.1 的质量与稳定性升级：播放可靠性、音源并发、歌词一致性、安全边界与性能诊断收口。完整说明见 [v0.4.0 发布页](https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.4.0%E7%A8%B3%E5%AE%9A%E7%89%88)。
+
+### 新增
+
+- **播放倍速**：0.5× / 0.75× / 1.0× / 1.25× / 1.5× / 2.0× 六档；双 deck 同步倍速、保持音高，重启后保留
+- **睡眠唤醒恢复**：系统睡眠时暂停，只有睡眠前正在播放才在唤醒后恢复，原本暂停不会自动播放
+- **输出设备恢复**：输出设备断开后自动回退系统默认输出并持久化
+- **单实例运行**：第二实例聚焦已有窗口并退出
+- 发布附带文档：`USER-GUIDE-0.4.0.md`、`RELEASE-NOTES-0.4.0.md` 随发布页提供
+
+### 改进
+
+- **聚合搜索**：单音源截止时间，单个音源不返回时给出 TIMEOUT 结果行，不再拖死整个搜索；同一音源搜索结果自动去重，重复项补齐缺失封面、音质和播放地址；渲染层平台与音源结果同步去重
+- **歌词一致性**：快速切歌增加 request-token + track id 双守卫，旧歌曲歌词不会落到新歌曲下；导入保存期间切歌不会采纳旧结果
+- **音频链路**：修复 CORS / Range / WebAudio analyser 读不到音频能量的问题，频谱在跨域场景不再恒为 0
+
+### 安全与性能
+
+- 依赖升级：music-metadata 11.15.0 → 11.16.0、source-map-js 1.2.1 → 1.2.2；`npm audit --omit=dev` 为 0 vulnerabilities（v0.3.1 时有 2 个已知漏洞）
+- IPC sender 增加 renderer URL allowlist（此前只校验顶层 frame）
+- 帧计数按 rAF serial 去重；帧率 / 焦点变化立即同步诊断镜像；频谱、唱盘暂停后释放 rAF
+
+### 质量
+
+- 源码回归 295/295 × 3 轮
+- smoke:sources 150/150、smoke:media 26/26、smoke:audio 69/69、smoke:lyrics 84/84
+- check:idle 5/5、check:focus 13/13、check:maintenance 35/35、check:a11y 8/8、check:icons 18/18
+- typecheck、lint 通过；npm audit 0 vulnerabilities
+
+## [0.3.1] - 2026-10-31
+
+基于 v0.3.0「视觉与主题 2.0」的体验收口版本：不扩大功能边界，重点把页面动效、沉浸歌词、频谱 / 唱盘、设置页、主题中心和状态组件做一致、做完整、做可验证。完整说明见 [v0.3.1 发布页](https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.3.1)。
+
+### 新增
+
+- **动效令牌体系**：列表 / 设置 / 歌词三套动效节奏（fade + rise、fade + scale、独立 Teleport 入场）；动效时长与缓动统一迁移到 `--dur-*` / `--ease-*`；新增 `check:motion` 禁止裸写动效时长和缓动；真实路由切换采样单帧 ≤ 120ms、无 long task
+- **语义阴影与状态组件**：新增 `--shadow-panel` / `--shadow-float` / `--shadow-player` / `--shadow-dialog`；统一 `EmptyState` / `LoadingState` / `ErrorState`；42 项 UI 属性迁移到语义 token
+- **设置页分区导航**：5 组 sticky 分区、14 个锚点
+- **主题中心诊断**：新增「复制为自定义主题」；主题卡提示缺少 token / 氛围配方缺失 / 对比度低，坏主题可展开查看具体原因；新增 `check:accent` 主题色使用审计
+
+### 改进
+
+- **沉浸页与歌词**：顶部只保留一个「更多」入口；页内控制新增可拖动进度条；已唱 / 当前 / 未唱层级重做；逐字填充改用音频元素连续时钟，不再受 4Hz `timeupdate` 阶梯影响；seek 后当前行、逐字填充和滚动位置保持一致
+- **频谱与唱盘**：频谱改对数频段（低频增益 1.28 → 高频 0.78）、快起慢落 + 峰值保持；唱盘新增 lead-in groove、locked run-out 与标签印刷，唱针短线性过渡、暂停自动抬起；暂停 / 低能耗释放 rAF
+- **可访问性**：歌词导入等动态弹窗接入焦点捕获、Tab 循环、关闭后焦点归还；主要路由自动审计 8/8 通过；核心控件统一 SVG 图标和可访问名
+- **侧栏 / 顶栏 / 播放栏 / 队列 / 弹窗**：圆角、间距、阴影统一到 token
+
+### 质量
+
+- smoke:app 290/290 × 3 轮
+- smoke:theme 90/90、smoke:visual 88/88、smoke:lyrics 83/83
+- check:a11y 8/8、check:icons 18/18、check:features 9/9（52/52）
+- check:motion、check:accent 通过；release:verify 6/6
 
 ## [0.3.0] - 2026-10-30
 
 视觉与主题 2.0。完整说明见 [v0.3.0 发布页](https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.3.0)。
 
-> 当前状态：0.3.0 候选版。静态检查与专项测试已通过，但最终 3 轮 `smoke:app` 尚未全绿；正式发布前仍需修复已知问题并重新跑满 3 轮。
+> 发布时状态：0.3.0 候选版（当时最终 3 轮 `smoke:app` 尚未全绿）。该状态已结束：v0.3.1 完成视觉一致性收口（smoke:app 290/290 × 3），v0.4.0 已发布稳定版。
 
 ### 新增
 
@@ -65,7 +122,9 @@ Aurora Music 的所有重要改动都会记录在这里。
 - **下载**：队列并发、断点续传、暂停 / 继续 / 重试，文件名模板，MP3 自动写入 ID3 标签（含封面）
 - **管理**：收藏、播放历史、歌单（JSON 导入导出）、音乐统计、完整备份 / 恢复；可选的本机只读 HTTP API（默认关闭，仅 127.0.0.1 + 令牌）
 
-[未发布]: https://github.com/virtux712-beep/Aurora-Music/compare/v0.3.0...HEAD
+[未发布]: https://github.com/virtux712-beep/Aurora-Music/compare/v0.4.0%E7%A8%B3%E5%AE%9A%E7%89%88...HEAD
+[0.4.0]: https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.4.0%E7%A8%B3%E5%AE%9A%E7%89%88
+[0.3.1]: https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.3.1
 [0.3.0]: https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.3.0
 [0.2.0]: https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.2.0
 [0.1.0]: https://github.com/virtux712-beep/Aurora-Music/releases/tag/v0.1.0

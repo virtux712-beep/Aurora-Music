@@ -4,9 +4,11 @@
 
 | 文档 | 适合谁 | 内容 |
 | --- | --- | --- |
-| [更新日志](../CHANGELOG.md) | 所有用户 | 每个版本的改动说明与版本历史（v0.3.0 / v0.2.0 / v0.1.0） |
+| [更新日志](../CHANGELOG.md) | 所有用户 | 每个版本的改动说明与版本历史（v0.4.0 / v0.3.1 / v0.3.0 / v0.2.0 / v0.1.0） |
 | [使用手册](USER-GUIDE.md) | 所有用户 | 安装、导入本地音乐、播放与歌词、音源安装与管理、下载、备份恢复 |
-| [发布说明 v0.1.0](RELEASE-NOTES-0.1.0.md) | 所有用户 | 当前版本的完整功能清单与已知说明 |
+| [使用手册 v0.4.0](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.4.0%E7%A8%B3%E5%AE%9A%E7%89%88/USER-GUIDE-0.4.0.md) | 所有用户 | v0.4.0 的使用手册（随 v0.4.0 发布页附带） |
+| [发布说明 v0.4.0](https://github.com/virtux712-beep/Aurora-Music/releases/download/v0.4.0%E7%A8%B3%E5%AE%9A%E7%89%88/RELEASE-NOTES-0.4.0.md) | 所有用户 | v0.4.0 的完整发布说明（随发布页附带） |
+| [发布说明 v0.1.0](RELEASE-NOTES-0.1.0.md) | 所有用户 | 首个公开版本（v0.1.0）的完整功能清单与已知说明 |
 | [开发文档](DEVELOPMENT.md) | 开发者 | 技术栈、进程结构、数据落盘位置、测试体系与常用命令 |
 | [音源运行时设计](SOURCE-RUNTIME-DESIGN.md) | 开发者 / 音源作者 | 音源的能力模型、注册表、沙箱运行时与主机授权机制 |
 | [视觉引擎](visual-engine.md) | 开发者 | 主题、粒子、帧率治理与沉浸模式的实现说明 |
